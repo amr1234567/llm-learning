@@ -1,321 +1,9 @@
 ---
-
+import Layout from '../../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LLM Settings Cheat Sheet</title>
-        <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                font-family: "Segoe UI", sans-serif;
-                background: #0f1117;
-                color: #e2e8f0;
-                min-height: 100vh;
-                padding: 2rem;
-            }
-            h1 {
-                text-align: center;
-                font-size: 1.8rem;
-                margin-bottom: 0.4rem;
-                color: #fff;
-            }
-            .subtitle {
-                text-align: center;
-                color: #94a3b8;
-                margin-bottom: 2rem;
-                font-size: 0.95rem;
-            }
-            .grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                gap: 1.2rem;
-            }
-            .card {
-                background: #1e2130;
-                border: 1px solid #2d3348;
-                border-radius: 14px;
-                padding: 1.4rem;
-                transition:
-                    transform 0.2s,
-                    box-shadow 0.2s;
-                cursor: default;
-                position: relative;
-                overflow: hidden;
-            }
-            .card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-            }
-            .card-header {
-                display: flex;
-                align-items: center;
-                gap: 0.8rem;
-                margin-bottom: 0.8rem;
-            }
-            .icon {
-                font-size: 1.6rem;
-            }
-            .param-name {
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: #fff;
-            }
-            .tag {
-                font-size: 0.7rem;
-                padding: 2px 8px;
-                border-radius: 20px;
-                font-weight: 600;
-                letter-spacing: 0.04em;
-            }
-            .tag-sampling {
-                background: #7c3aed22;
-                color: #a78bfa;
-                border: 1px solid #7c3aed44;
-            }
-            .tag-length {
-                background: #059669aa22;
-                color: #34d399;
-                border: 1px solid #05966944;
-            }
-            .tag-penalty {
-                background: #b4530022;
-                color: #fb923c;
-                border: 1px solid #b4530044;
-            }
-            .description {
-                color: #94a3b8;
-                font-size: 0.88rem;
-                line-height: 1.6;
-                margin-bottom: 1rem;
-            }
-
-            .slider-wrap {
-                margin-bottom: 0.8rem;
-            }
-            .slider-labels {
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.72rem;
-                color: #64748b;
-                margin-bottom: 4px;
-            }
-            input[type="range"] {
-                width: 100%;
-                -webkit-appearance: none;
-                height: 6px;
-                border-radius: 3px;
-                background: #2d3348;
-                outline: none;
-            }
-            input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                background: #6366f1;
-                cursor: pointer;
-                border: 2px solid #fff;
-                box-shadow: 0 0 8px #6366f188;
-            }
-            .slider-value {
-                text-align: center;
-                font-size: 0.85rem;
-                font-weight: 700;
-                color: #6366f1;
-                margin-top: 4px;
-            }
-
-            .use-cases {
-                display: flex;
-                gap: 0.5rem;
-                flex-wrap: wrap;
-                margin-top: 0.5rem;
-            }
-            .use-case {
-                font-size: 0.72rem;
-                padding: 3px 10px;
-                border-radius: 20px;
-            }
-            .low {
-                background: #1e3a5f;
-                color: #60a5fa;
-            }
-            .high {
-                background: #1a3a2a;
-                color: #4ade80;
-            }
-
-            .tip-banner {
-                background: #1e2130;
-                border: 1px solid #3b4268;
-                border-radius: 12px;
-                padding: 1rem 1.4rem;
-                margin-top: 1.5rem;
-                display: flex;
-                align-items: flex-start;
-                gap: 0.8rem;
-            }
-            .tip-banner .tip-icon {
-                font-size: 1.4rem;
-                flex-shrink: 0;
-            }
-            .tip-banner p {
-                font-size: 0.88rem;
-                color: #94a3b8;
-                line-height: 1.6;
-            }
-            .tip-banner strong {
-                color: #e2e8f0;
-            }
-
-            .accent-bar {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 4px;
-                height: 100%;
-                border-radius: 14px 0 0 14px;
-            }
-            .purple .accent-bar {
-                background: #7c3aed;
-            }
-            .green .accent-bar {
-                background: #059669;
-            }
-            .orange .accent-bar {
-                background: #ea580c;
-            }
-
-            .plain-hint {
-                background: #12151f;
-                border-left: 3px solid #6366f1;
-                border-radius: 0 8px 8px 0;
-                padding: 0.65rem 0.9rem;
-                margin: 0.7rem 0 0.5rem;
-                font-size: 0.82rem;
-                color: #94a3b8;
-                line-height: 1.55;
-            }
-            .plain-hint strong {
-                color: #c7d2fe;
-            }
-            .plain-hint .example {
-                color: #818cf8;
-                font-style: italic;
-                margin-top: 4px;
-                display: block;
-            }
-
-            .spectrum-section {
-                background: #1e2130;
-                border: 1px solid #2d3348;
-                border-radius: 14px;
-                padding: 1.4rem 1.8rem;
-                margin-top: 1.5rem;
-            }
-            .spectrum-section h2 {
-                font-size: 1rem;
-                color: #fff;
-                margin-bottom: 1.2rem;
-                text-align: center;
-            }
-            .spectrum-row {
-                margin-bottom: 1.1rem;
-            }
-            .spectrum-label {
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.78rem;
-                margin-bottom: 5px;
-            }
-            .spectrum-label .s-name {
-                color: #e2e8f0;
-                font-weight: 600;
-            }
-            .spectrum-label .s-left {
-                color: #60a5fa;
-            }
-            .spectrum-label .s-right {
-                color: #4ade80;
-            }
-            .spectrum-bar-outer {
-                height: 10px;
-                background: linear-gradient(to right, #1e3a5f, #1a3a2a);
-                border-radius: 10px;
-                position: relative;
-            }
-            .spectrum-bar-outer::after {
-                content: "";
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                width: 2px;
-                height: 16px;
-                background: #3b4268;
-                border-radius: 2px;
-            }
-
-            .big-picture {
-                background: #1e2130;
-                border: 1px solid #2d3348;
-                border-radius: 14px;
-                padding: 1.4rem 1.8rem;
-                margin-top: 1.2rem;
-            }
-            .big-picture h2 {
-                font-size: 1rem;
-                color: #fff;
-                margin-bottom: 0.8rem;
-            }
-            .big-picture p {
-                font-size: 0.88rem;
-                color: #94a3b8;
-                line-height: 1.7;
-            }
-            .big-picture strong {
-                color: #e2e8f0;
-            }
-            .highlight-box {
-                display: flex;
-                gap: 1rem;
-                margin-top: 1rem;
-                flex-wrap: wrap;
-            }
-            .hbox {
-                flex: 1;
-                min-width: 180px;
-                background: #12151f;
-                border-radius: 10px;
-                padding: 0.8rem 1rem;
-                font-size: 0.82rem;
-            }
-            .hbox .hbox-title {
-                font-weight: 700;
-                margin-bottom: 4px;
-            }
-            .hbox.focused .hbox-title {
-                color: #60a5fa;
-            }
-            .hbox.creative .hbox-title {
-                color: #4ade80;
-            }
-            .hbox ul {
-                padding-left: 1rem;
-                color: #94a3b8;
-                line-height: 1.8;
-            }
-        </style>
-    </head>
-    <body>
+<Layout>
+    <div class="container">
         <h1>🎛️ LLM Settings Cheat Sheet</h1>
         <p class="subtitle">
             Interact with the sliders to explore how each setting affects model
@@ -325,9 +13,7 @@
             <a
                 href="https://www.promptingguide.ai/introduction/settings"
                 target="_blank"
-                style="display:inline-flex; align-items:center; gap:0.5rem; background:#1e2130; border:1px solid #3b4268;
-            color:#818cf8; text-decoration:none; padding:0.45rem 1.1rem; border-radius:20px; font-size:0.85rem;
-            transition: background 0.2s, border-color 0.2s;"
+                class="doc-link"
                 onmouseover="this.style.background='#2d3348'; this.style.borderColor='#6366f1';"
                 onmouseout="this.style.background='#1e2130'; this.style.borderColor='#3b4268';"
             >
@@ -697,21 +383,339 @@
                 </div>
             </div>
         </div>
+    </div>
+</Layout>
 
-        <script>
-            function updateSlider(el : HTMLInputElement, displayId : string, maxVal : number, isInt : boolean) {
-                const raw = parseFloat(el.value);
-                let display;
-                if (isInt) {
-                    display = Math.round(raw) + " tokens";
-                } else {
-                    display = ((raw / 100) * maxVal).toFixed(2);
-                }
-                const displayElement = document.getElementById(displayId);
-                if (displayElement) {
-                    displayElement.textContent = display;
-                }
-            }
-        </script>
-    </body>
-</html>
+<style>
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 0.4rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+    }
+    .doc-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.2rem;
+    }
+    .card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.4rem;
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+    .icon {
+        font-size: 1.6rem;
+    }
+    .param-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+    }
+    .tag {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+    .tag-sampling {
+        background: #7c3aed22;
+        color: #a78bfa;
+        border: 1px solid #7c3aed44;
+    }
+    .tag-length {
+        background: #059669aa22;
+        color: #34d399;
+        border: 1px solid #05966944;
+    }
+    .tag-penalty {
+        background: #b4530022;
+        color: #fb923c;
+        border: 1px solid #b4530044;
+    }
+    .description {
+        color: #94a3b8;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .slider-wrap {
+        margin-bottom: 0.8rem;
+    }
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
+    input[type="range"] {
+        width: 100%;
+        -webkit-appearance: none;
+        height: 6px;
+        border-radius: 3px;
+        background: #2d3348;
+        outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #6366f1;
+        cursor: pointer;
+        border: 2px solid #fff;
+        box-shadow: 0 0 8px #6366f188;
+    }
+    .slider-value {
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #6366f1;
+        margin-top: 4px;
+    }
+
+    .use-cases {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+    .use-case {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+    .low {
+        background: #1e3a5f;
+        color: #60a5fa;
+    }
+    .high {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner .tip-icon {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .tip-banner p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+
+    .accent-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        border-radius: 14px 0 0 14px;
+    }
+    .purple .accent-bar {
+        background: #7c3aed;
+    }
+    .green .accent-bar {
+        background: #059669;
+    }
+    .orange .accent-bar {
+        background: #ea580c;
+    }
+
+    .plain-hint {
+        background: #12151f;
+        border-left: 3px solid #6366f1;
+        border-radius: 0 8px 8px 0;
+        padding: 0.65rem 0.9rem;
+        margin: 0.7rem 0 0.5rem;
+        font-size: 0.82rem;
+        color: #94a3b8;
+        line-height: 1.55;
+    }
+    .plain-hint strong {
+        color: #c7d2fe;
+    }
+    .plain-hint .example {
+        color: #818cf8;
+        font-style: italic;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .spectrum-section {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.4rem 1.8rem;
+        margin-top: 1.5rem;
+    }
+    .spectrum-section h2 {
+        font-size: 1rem;
+        color: #fff;
+        margin-bottom: 1.2rem;
+        text-align: center;
+    }
+    .spectrum-row {
+        margin-bottom: 1.1rem;
+    }
+    .spectrum-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        margin-bottom: 5px;
+    }
+    .spectrum-label .s-name {
+        color: #e2e8f0;
+        font-weight: 600;
+    }
+    .spectrum-label .s-left {
+        color: #60a5fa;
+    }
+    .spectrum-label .s-right {
+        color: #4ade80;
+    }
+    .spectrum-bar-outer {
+        height: 10px;
+        background: linear-gradient(to right, #1e3a5f, #1a3a2a);
+        border-radius: 10px;
+        position: relative;
+    }
+    .spectrum-bar-outer::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 2px;
+        height: 16px;
+        background: #3b4268;
+        border-radius: 2px;
+    }
+
+    .big-picture {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.4rem 1.8rem;
+        margin-top: 1.2rem;
+    }
+    .big-picture h2 {
+        font-size: 1rem;
+        color: #fff;
+        margin-bottom: 0.8rem;
+    }
+    .big-picture p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.7;
+    }
+    .big-picture strong {
+        color: #e2e8f0;
+    }
+    .highlight-box {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+    .hbox {
+        flex: 1;
+        min-width: 180px;
+        background: #12151f;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        font-size: 0.82rem;
+    }
+    .hbox .hbox-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .hbox.focused .hbox-title {
+        color: #60a5fa;
+    }
+    .hbox.creative .hbox-title {
+        color: #4ade80;
+    }
+    .hbox ul {
+        padding-left: 1rem;
+        color: #94a3b8;
+        line-height: 1.8;
+    }
+</style>
+
+<script>
+    function updateSlider(
+        el: HTMLInputElement,
+        displayId: string,
+        maxVal: number,
+        isInt: boolean = false,
+    ) {
+        const raw = parseFloat(el.value);
+        let display;
+        if (isInt) {
+            display = Math.round(raw) + " tokens";
+        } else {
+            display = ((raw / 100) * maxVal).toFixed(2);
+        }
+        const displayElement = document.getElementById(displayId);
+        if (displayElement) {
+            displayElement.textContent = display;
+        }
+    }
+</script>

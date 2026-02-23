@@ -1,0 +1,696 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+    <div class="container">
+        <h1>✍️ Basics of Prompting</h1>
+        <p class="subtitle">
+            How to talk to an AI effectively — from simple instructions to
+            powerful techniques
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/introduction/basics"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Core idea -->
+        <div class="section-title">💡 The Core Idea</div>
+        <div class="concept-card">
+            <h3>What is a Prompt?</h3>
+            <p>
+                A prompt is simply what you <strong style="color:#e2e8f0;"
+                    >type to the AI</strong
+                > to get a response. It can be a question, an instruction, or even
+                just an incomplete sentence. The better your prompt, the better the
+                answer.
+            </p>
+            <p class="hint">
+                🧠 Think of it like giving instructions to a new employee —
+                vague instructions = vague results. Clear instructions = great
+                results.
+            </p>
+        </div>
+
+        <!-- Bad vs Good comparison -->
+        <div class="section-title">⚡ Vague Prompt vs. Clear Prompt</div>
+        <div class="comparison">
+            <div class="prompt-box">
+                <span class="label label-bad">😕 Vague Prompt</span>
+                <div class="prompt-text">The sky is</div>
+                <div class="output-text">Output: <span>blue.</span></div>
+                <div class="verdict bad">
+                    ❌ Too short — AI just completes the sentence randomly
+                </div>
+            </div>
+            <div class="prompt-box">
+                <span class="label label-good">✅ Clear Prompt</span>
+                <div class="prompt-text">Complete the sentence: The sky is</div>
+                <div class="output-text">
+                    Output: <span>blue during the day and dark at night.</span>
+                </div>
+                <div class="verdict good">
+                    ✅ Better! AI now knows exactly what to do
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt Roles -->
+        <div class="section-title">🎭 The 3 Roles in a Prompt</div>
+        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:1rem;">
+            When using chat models (like GPT-4 or Claude), prompts can have 3
+            roles. Most of the time you only use "User".
+        </p>
+        <div class="roles">
+            <div class="role-card system">
+                <div class="role-icon">⚙️</div>
+                <div class="role-name">System</div>
+                <p>
+                    Sets the AI's overall behavior and personality before the
+                    conversation starts
+                </p>
+                <span class="required">Optional</span>
+            </div>
+            <div class="role-card user">
+                <div class="role-icon">🧑</div>
+                <div class="role-name">User</div>
+                <p>
+                    Your message — the question or instruction you send to the
+                    AI
+                </p>
+                <span class="required">Always Used</span>
+            </div>
+            <div class="role-card assistant">
+                <div class="role-icon">🤖</div>
+                <div class="role-name">Assistant</div>
+                <p>
+                    The AI's reply. Can also be pre-filled to show the AI
+                    examples of the style you want
+                </p>
+                <span class="required">Optional</span>
+            </div>
+        </div>
+
+        <!-- Shot Types -->
+        <div class="section-title">
+            🎯 Prompting Techniques — Zero-shot vs Few-shot
+        </div>
+        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:1rem;">
+            Click each tab to see how it works with a real example:
+        </p>
+        <div class="shot-tabs">
+            <div class="shot-tab active" onclick="showShot(event, 'zero')">
+                Zero-shot
+            </div>
+            <div class="shot-tab" onclick="showShot(event, 'few')">Few-shot</div>
+            <div class="shot-tab" onclick="showShot(event, 'qa')">Q&A Format</div>
+        </div>
+
+        <div class="shot-content active" id="shot-zero">
+            <p class="desc">
+                <strong style="color:#e2e8f0;">Zero-shot</strong> means you give the
+                AI NO examples — just ask directly. Works great for simple tasks with
+                modern models.
+            </p>
+            <p class="hint">
+                🧠 Like asking a new employee to do something with zero training
+                — works if they're smart enough!
+            </p>
+            <div class="code-block">
+                <span class="prompt-label">PROMPT:</span>
+                What is prompt engineering?
+
+                <span class="output-label">OUTPUT:</span>
+                Prompt engineering is the practice of designing and refining inputs
+                to AI models to get better, more accurate responses...
+            </div>
+        </div>
+
+        <div class="shot-content" id="shot-few">
+            <p class="desc">
+                <strong style="color:#e2e8f0;">Few-shot</strong> means you give the
+                AI 2–3 examples first, then ask your question. The AI learns the pattern
+                from your examples and follows it.
+            </p>
+            <p class="hint">
+                🧠 Like showing an employee 3 examples of how you want a task
+                done, then asking them to do it themselves.
+            </p>
+            <div class="code-block">
+                <span class="prompt-label">PROMPT (with examples):</span>
+                This is awesome! <span class="comment">// Positive</span>
+                This is bad! <span class="comment">// Negative</span>
+                Wow, great movie! <span class="comment">// Positive</span>
+                What a horrible show! <span class="comment">// ???</span>
+
+                <span class="output-label">OUTPUT:</span>
+                Negative
+            </div>
+        </div>
+
+        <div class="shot-content" id="shot-qa">
+            <p class="desc">
+                <strong style="color:#e2e8f0;">Q&A Format</strong> is a simple structure
+                where you explicitly write "Q:" before your question and "A:" to signal
+                where the answer should go. Helps the AI understand it's a question-answer
+                task.
+            </p>
+            <p class="hint">
+                🧠 Like filling in a form — the labels make the structure
+                crystal clear.
+            </p>
+            <div class="code-block">
+                <span class="prompt-label">PROMPT:</span>
+                Q: What is the capital of Egypt? A:
+
+                <span class="output-label">OUTPUT:</span>
+                Cairo
+
+                <span class="comment">// Multiple Q&A in one prompt:</span>
+                Q: What is 2 + 2? A: 4 Q: What is the capital of France? A: Paris
+                Q: What is the capital of Japan? A:
+            </div>
+        </div>
+
+        <!-- Prompt quality checker -->
+        <div class="try-it">
+            <h3>🧪 Prompt Quality Checker</h3>
+            <p>
+                Type a prompt below and see how well-structured it is based on
+                what we learned:
+            </p>
+            <textarea
+                id="prompt-input"
+                placeholder="Type your prompt here... e.g. 'What is AI?'"
+                oninput="checkPrompt()"></textarea>
+            <div class="score-display" id="score-display" style="display:none;">
+                <div class="score-label">
+                    <span>Clarity</span><span id="clarity-pct">0%</span>
+                </div>
+                <div class="score-bar">
+                    <div
+                        class="score-fill"
+                        id="clarity-bar"
+                        style="width:0%; background:#6366f1;"
+                    >
+                    </div>
+                </div>
+                <div class="score-label">
+                    <span>Specificity</span><span id="specific-pct">0%</span>
+                </div>
+                <div class="score-bar">
+                    <div
+                        class="score-fill"
+                        id="specific-bar"
+                        style="width:0%; background:#059669;"
+                    >
+                    </div>
+                </div>
+                <div class="score-feedback" id="score-feedback"></div>
+            </div>
+        </div>
+
+        <div class="tip-banner">
+            <span style="font-size:1.4rem; flex-shrink:0;">💡</span>
+            <p>
+                <strong>Key Takeaway:</strong> Prompt engineering is just about being
+                <strong>clear and specific</strong> with the AI. Start simple (zero-shot),
+                and if the answer isn't good enough, add examples (few-shot) or more
+                context. The more information you give, the better the result.
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .container {
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        transition:
+            background 0.2s,
+            border-color 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Section headers */
+    .section-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #a78bfa;
+        margin: 2rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #2d3348;
+    }
+
+    /* Concept cards */
+    .concept-card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #6366f1;
+    }
+    .concept-card.green {
+        border-left-color: #059669;
+    }
+    .concept-card.orange {
+        border-left-color: #ea580c;
+    }
+    .concept-card.yellow {
+        border-left-color: #d97706;
+    }
+    .concept-card h3 {
+        font-size: 0.95rem;
+        color: #fff;
+        margin-bottom: 0.4rem;
+    }
+    .concept-card p {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .concept-card .hint {
+        font-size: 0.8rem;
+        color: #818cf8;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    /* Prompt comparison */
+    .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+        .comparison {
+            grid-template-columns: 1fr;
+        }
+    }
+    .prompt-box {
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+    }
+    .prompt-box .label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.6rem;
+        padding: 2px 10px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+    .label-bad {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+    .label-good {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .prompt-text {
+        font-family: monospace;
+        font-size: 0.82rem;
+        color: #c7d2fe;
+        background: #0f1117;
+        border-radius: 8px;
+        padding: 0.7rem 0.9rem;
+        margin-bottom: 0.6rem;
+    }
+    .output-text {
+        font-size: 0.82rem;
+        color: #94a3b8;
+    }
+    .output-text span {
+        color: #4ade80;
+        font-weight: 600;
+    }
+    .verdict {
+        font-size: 0.78rem;
+        margin-top: 0.5rem;
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    .verdict.bad {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+    .verdict.good {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+
+    /* Roles section */
+    .roles {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+    .role-card {
+        flex: 1;
+        min-width: 160px;
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        border: 1px solid #2d3348;
+    }
+    .role-card .role-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .role-card .role-name {
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+    .role-card.system .role-name {
+        color: #a78bfa;
+    }
+    .role-card.user .role-name {
+        color: #60a5fa;
+    }
+    .role-card.assistant .role-name {
+        color: #4ade80;
+    }
+    .role-card p {
+        font-size: 0.78rem;
+        color: #64748b;
+        line-height: 1.5;
+    }
+    .role-card .required {
+        font-size: 0.68rem;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-top: 0.4rem;
+        display: inline-block;
+    }
+    .role-card.system .required {
+        background: #2d1e4a;
+        color: #a78bfa;
+    }
+    .role-card.user .required {
+        background: #1e3a5f;
+        color: #60a5fa;
+    }
+    .role-card.assistant .required {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+
+    /* Shot types interactive */
+    .shot-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .shot-tab {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .shot-tab.active {
+        background: #6366f1;
+        color: #fff;
+        border-color: #6366f1;
+    }
+    .shot-content {
+        display: none;
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1.2rem;
+    }
+    .shot-content.active {
+        display: block;
+    }
+    .shot-content .desc {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        line-height: 1.6;
+    }
+    .shot-content .hint {
+        font-size: 0.8rem;
+        color: #818cf8;
+        font-style: italic;
+        margin-bottom: 0.8rem;
+    }
+    .code-block {
+        font-family: monospace;
+        font-size: 0.8rem;
+        background: #0f1117;
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+        color: #c7d2fe;
+        line-height: 1.8;
+        white-space: pre-wrap;
+    }
+    .code-block .prompt-label {
+        color: #64748b;
+        font-size: 0.72rem;
+    }
+    .code-block .output-label {
+        color: #4ade80;
+    }
+    .code-block .comment {
+        color: #4b5563;
+    }
+
+    /* Try it yourself */
+    .try-it {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 14px;
+        padding: 1.4rem;
+        margin-top: 1.5rem;
+    }
+    .try-it h3 {
+        font-size: 0.95rem;
+        color: #fff;
+        margin-bottom: 0.3rem;
+    }
+    .try-it p {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+    }
+    .try-it textarea {
+        width: 100%;
+        background: #0f1117;
+        border: 1px solid #2d3348;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 0.8rem;
+        font-size: 0.85rem;
+        font-family: monospace;
+        resize: vertical;
+        min-height: 80px;
+        outline: none;
+    }
+    .try-it textarea:focus {
+        border-color: #6366f1;
+    }
+    .score-display {
+        margin-top: 1rem;
+    }
+    .score-bar {
+        height: 8px;
+        background: #2d3348;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 6px 0 3px;
+    }
+    .score-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.4s;
+    }
+    .score-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+    .score-feedback {
+        font-size: 0.82rem;
+        margin-top: 0.8rem;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        line-height: 1.5;
+    }
+
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+</style>
+
+<script>
+    function showShot(event: Event, type: string) {
+        document
+            .querySelectorAll(".shot-content")
+            .forEach((el) => el.classList.remove("active"));
+        document
+            .querySelectorAll(".shot-tab")
+            .forEach((el) => el.classList.remove("active"));
+        document
+            .getElementById("shot-" + type)
+            ?.classList.add("active");
+        (event?.target as HTMLElement)?.classList.add("active");
+    }
+
+    function checkPrompt() {
+        const prompt = (
+            document.getElementById("prompt-input") as HTMLInputElement
+        )?.value.trim();
+        const display = document.getElementById("score-display");
+        if (!prompt) {
+            if (display) display.style.display = "none";
+            return;
+        }
+        if (display) display.style.display = "block";
+
+        // Clarity: has verb/instruction word?
+        const instructionWords = [
+            "what",
+            "how",
+            "why",
+            "explain",
+            "write",
+            "list",
+            "describe",
+            "summarize",
+            "translate",
+            "create",
+            "generate",
+            "complete",
+            "find",
+            "compare",
+            "give",
+        ];
+        const hasInstruction = instructionWords.some((w) =>
+            prompt.toLowerCase().includes(w),
+        );
+        const isLongEnough = prompt.length > 15;
+        let clarity = 0;
+        if (hasInstruction) clarity += 50;
+        if (isLongEnough) clarity += 30;
+        if (prompt.includes("?") || prompt.endsWith(".")) clarity += 20;
+        clarity = Math.min(clarity, 100);
+
+        // Specificity: has context/detail?
+        const wordCount = prompt.split(" ").length;
+        let specificity = Math.min(wordCount * 8, 100);
+        if (prompt.toLowerCase().includes("example"))
+            specificity = Math.min(specificity + 20, 100);
+        if (
+            prompt.toLowerCase().includes("format") ||
+            prompt.toLowerCase().includes("list") ||
+            prompt.toLowerCase().includes("step")
+        )
+            specificity = Math.min(specificity + 15, 100);
+
+        const clarityBar = document.getElementById("clarity-bar");
+        const clarityPct = document.getElementById("clarity-pct");
+        const specificBar = document.getElementById("specific-bar");
+
+        if (clarityBar) clarityBar.style.width = clarity + "%";
+        if (clarityPct) clarityPct.textContent = clarity + "%";
+        if (specificBar) specificBar.style.width = specificity + "%";
+
+        const specificPct = document.getElementById("specific-pct");
+        if (specificPct) specificPct.textContent = specificity + "%";
+
+        const avg = (clarity + specificity) / 2;
+        const feedback = document.getElementById("score-feedback");
+        if (avg >= 75) {
+            if (feedback) {
+                feedback.style.background = "#1a3a2a";
+                feedback.style.color = "#4ade80";
+                feedback.textContent =
+                    "✅ Great prompt! Clear and specific — the AI should give you a good answer.";
+            }
+        } else if (avg >= 45) {
+            if (feedback) {
+                feedback.style.background = "#2a2a1a";
+                feedback.style.color = "#fbbf24";
+                feedback.textContent =
+                    '⚠️ Decent prompt, but could be more specific. Try adding more context or an instruction word like "explain" or "list".';
+            }
+        } else {
+            if (feedback) {
+                feedback.style.background = "#3a1e1e";
+                feedback.style.color = "#f87171";
+                feedback.textContent =
+                    '❌ Too vague. Add more detail — what exactly do you want the AI to do? Try starting with "Explain...", "Write...", or "Give me a list of..."';
+            }
+        }
+    }
+</script>

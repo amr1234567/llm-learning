@@ -1,0 +1,817 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+    <div class="container">
+        <h1>💡 Tips for Designing Prompts</h1>
+        <p class="subtitle">
+            5 practical rules that separate a mediocre prompt from a great one —
+            with real before/after examples
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/introduction/tips"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-wrap" id="progress-wrap">
+            <div class="progress-step" onclick="goTo(0)"></div>
+            <div class="progress-step" onclick="goTo(1)"></div>
+            <div class="progress-step" onclick="goTo(2)"></div>
+            <div class="progress-step" onclick="goTo(3)"></div>
+            <div class="progress-step" onclick="goTo(4)"></div>
+            <div class="progress-step" onclick="goTo(5)"></div>
+        </div>
+
+        <!-- Tip nav -->
+        <div class="tip-nav">
+            <div class="tip-btn active" onclick="goTo(0)" id="btn-0">
+                🚀 Start Simple
+            </div>
+            <div class="tip-btn" onclick="goTo(1)" id="btn-1">
+                📋 Use Instructions
+            </div>
+            <div class="tip-btn" onclick="goTo(2)" id="btn-2">
+                🎯 Be Specific
+            </div>
+            <div class="tip-btn" onclick="goTo(3)" id="btn-3">
+                ✂️ Avoid Vagueness
+            </div>
+            <div class="tip-btn" onclick="goTo(4)" id="btn-4">
+                ✅ Do vs Don't
+            </div>
+            <div class="tip-btn" onclick="goTo(5)" id="btn-5">
+                📋 Cheat Sheet
+            </div>
+        </div>
+
+        <!-- TIP 1: Start Simple -->
+        <div class="tip-card active" id="tip-0">
+            <div class="tip-header">
+                <div class="tip-number">1</div>
+                <div class="tip-title">🚀 Start Simple</div>
+            </div>
+            <p class="tip-desc">
+                Don't try to write the perfect prompt on your first try. Start
+                with the simplest version, see what the AI gives you, then add
+                more details step by step until you get what you want. Prompt
+                engineering is an <strong style="color:#e2e8f0;"
+                    >iterative process</strong
+                >.
+            </p>
+            <div class="tip-hint">
+                🧠 <strong>Think of it like cooking:</strong> You don't add all the
+                spices at once. You taste, adjust, taste again. Same with prompts
+                — write, test, improve, repeat.
+            </div>
+
+            <div class="rule-box">
+                <h4>How to apply this:</h4>
+                <ul class="rule-list">
+                    <li>Start with 1 sentence — just the instruction</li>
+                    <li>If the answer is off, add context or an example</li>
+                    <li>If it's too long/short, add a length instruction</li>
+                    <li>
+                        If you have a big task, break it into smaller subtasks
+                        first
+                    </li>
+                </ul>
+            </div>
+
+            <div class="compare">
+                <div class="compare-box before">
+                    <div class="compare-label">❌ WRONG APPROACH</div>
+                    <pre>Write a detailed, comprehensive, structured, professional summary of the following article with key takeaways, a TLDR, bullet points for each section, and a conclusion that ties it all together in an engaging way for a business audience...</pre>
+                    <div class="verdict">
+                        😵 Too much at once — easy to get confused output
+                    </div>
+                </div>
+                <div class="compare-box after">
+                    <div class="compare-label">✅ RIGHT APPROACH</div>
+                    <pre>Step 1: Summarize this article in 3 sentences.
+[test it]
+
+Step 2: Now add 3 bullet points.
+[test it]
+
+Step 3: Add a TLDR at the top.
+[done!]</pre>
+                    <div class="verdict">
+                        ✅ Build up gradually — better control
+                    </div>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" disabled>← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(1)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- TIP 2: Use Instructions -->
+        <div class="tip-card" id="tip-1">
+            <div class="tip-header">
+                <div class="tip-number">2</div>
+                <div class="tip-title">📋 Use Clear Instructions</div>
+            </div>
+            <p class="tip-desc">
+                Start your prompt with a strong action verb that tells the AI
+                exactly what operation to perform. Place the instruction at the <strong
+                    style="color:#e2e8f0;">beginning</strong
+                > of your prompt, and use a separator like <code
+                    style="color:#a78bfa;">###</code
+                > to split the instruction from the content.
+            </p>
+            <div class="tip-hint">
+                🧠 <strong>Common power verbs:</strong> Write, Classify, Summarize,
+                Translate, Extract, List, Compare, Explain, Generate, Convert, Fix,
+                Rewrite
+            </div>
+
+            <div class="compare">
+                <div class="compare-box before">
+                    <div class="compare-label">❌ NO CLEAR INSTRUCTION</div>
+                    <pre>The text below is in English.
+"hello!"</pre>
+                    <div class="output-label">Output:</div>
+                    <div class="output-text">
+                        Yes, "hello!" is an English greeting... (not what you
+                        wanted!)
+                    </div>
+                    <div class="verdict">❌ AI guessed what to do wrong</div>
+                </div>
+                <div class="compare-box after">
+                    <div class="compare-label">
+                        ✅ CLEAR INSTRUCTION + SEPARATOR
+                    </div>
+                    <pre>### Instruction ###
+Translate the text below to Spanish:
+
+Text: "hello!"</pre>
+                    <div class="output-label">Output:</div>
+                    <div class="output-text">
+                        ¡Hola!
+                    </div>
+                    <div class="verdict">✅ AI knew exactly what to do</div>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(0)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(2)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- TIP 3: Be Specific -->
+        <div class="tip-card" id="tip-2">
+            <div class="tip-header">
+                <div class="tip-number">3</div>
+                <div class="tip-title">🎯 Be Specific</div>
+            </div>
+            <p class="tip-desc">
+                The more descriptive and detailed your prompt, the better the
+                result. Describe the exact format you want, who the audience is,
+                what style to use, and what to include or exclude. <strong
+                    style="color:#e2e8f0;"
+                    >Vague prompts = vague answers.</strong
+                >
+            </p>
+            <div class="tip-hint">
+                🧠 <strong
+                    >Imagine describing your task to a very literal assistant</strong
+                > who does exactly what you say, nothing more, nothing less. Be precise
+                enough that there's only ONE way to interpret your request.
+            </div>
+
+            <div class="compare">
+                <div class="compare-box before">
+                    <div class="compare-label">❌ TOO VAGUE</div>
+                    <pre>Extract places from this text.
+
+"Henrique Veiga-Fernandes works at the Champalimaud Centre in Lisbon."</pre>
+                    <div class="output-label">Output:</div>
+                    <div class="output-text">
+                        Champalimaud Centre, Lisbon (format unknown, messy)
+                    </div>
+                    <div class="verdict">
+                        ❌ No format specified — unpredictable output
+                    </div>
+                </div>
+                <div class="compare-box after">
+                    <div class="compare-label">✅ SPECIFIC WITH FORMAT</div>
+                    <pre>Extract the name of places in the text below.
+
+Desired format:
+Place: &lt;comma_separated_list&gt;
+
+Text: "Henrique Veiga-Fernandes works at the Champalimaud Centre in Lisbon."</pre>
+                    <div class="output-label">Output:</div>
+                    <div class="output-text">
+                        Place: Champalimaud Centre, Lisbon
+                    </div>
+                    <div class="verdict">
+                        ✅ Clean, structured, predictable output
+                    </div>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(1)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(3)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- TIP 4: Avoid Impreciseness -->
+        <div class="tip-card" id="tip-3">
+            <div class="tip-header">
+                <div class="tip-number">4</div>
+                <div class="tip-title">✂️ Avoid Vagueness</div>
+            </div>
+            <p class="tip-desc">
+                There's a difference between being <em>detailed</em> and being <em
+                    >vague</em
+                >. Saying "keep it short" is vague. Saying "use exactly 2
+                sentences" is specific. Always replace fuzzy words with concrete
+                ones — numbers, names, formats, examples.
+            </p>
+            <div class="tip-hint">
+                🧠 <strong>Rule of thumb:</strong> If 10 different people read your
+                prompt, would they all imagine the same output? If not — it's too
+                vague. Make it concrete enough that everyone pictures the same thing.
+            </div>
+
+            <div class="compare">
+                <div class="compare-box before">
+                    <div class="compare-label">❌ VAGUE WORDS</div>
+                    <pre>Explain prompt engineering. Keep it short, only a few sentences, and don't be too descriptive.</pre>
+                    <div class="verdict">
+                        ❌ "A few"? "Not too descriptive"? These mean different
+                        things to different people
+                    </div>
+                </div>
+                <div class="compare-box after">
+                    <div class="compare-label">✅ CONCRETE AND CLEAR</div>
+                    <pre>Use 2-3 sentences to explain prompt engineering to a high school student.</pre>
+                    <div class="verdict">
+                        ✅ Exact count + target audience = no ambiguity
+                    </div>
+                </div>
+            </div>
+
+            <div class="rule-box">
+                <h4>Replace vague words with concrete ones:</h4>
+                <ul class="rule-list">
+                    <li>"Short" → "2-3 sentences" or "under 50 words"</li>
+                    <li>
+                        "Simple" → "for a 10-year-old" or "no technical terms"
+                    </li>
+                    <li>
+                        "Professional" → "formal tone, no contractions, business
+                        language"
+                    </li>
+                    <li>"A few examples" → "give exactly 3 examples"</li>
+                </ul>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(2)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(4)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- TIP 5: Do vs Don't -->
+        <div class="tip-card" id="tip-4">
+            <div class="tip-header">
+                <div class="tip-number">5</div>
+                <div class="tip-title">
+                    ✅ Say What TO Do, Not What NOT To Do
+                </div>
+            </div>
+            <p class="tip-desc">
+                When you tell the AI "DON'T do X", it often still does X —
+                because the instruction puts X in focus. Instead, tell the AI
+                what it <strong style="color:#e2e8f0;">should</strong> do. Positive
+                instructions work better than negative ones.
+            </p>
+            <div class="tip-hint">
+                🧠 <strong>The pink elephant problem:</strong> If I say "don't think
+                of a pink elephant" — you just did. Same with AI. "Don't ask for preferences"
+                makes the AI think about asking for preferences. Say "recommend from
+                trending movies" instead.
+            </div>
+
+            <div class="compare">
+                <div class="compare-box before">
+                    <div class="compare-label">❌ NEGATIVE INSTRUCTIONS</div>
+                    <pre>The following is a movie recommender agent.
+
+DO NOT ASK FOR INTERESTS.
+DO NOT ASK FOR PERSONAL INFORMATION.
+
+Customer: Recommend me a movie.
+Agent:</pre>
+                    <div class="output-label">Output (AI still does it!):</div>
+                    <div class="output-text">
+                        "Sure! What kind of movies do you like? Do you prefer
+                        action, comedy...?"
+                    </div>
+                    <div class="verdict">
+                        ❌ AI ignored "DO NOT" and asked anyway
+                    </div>
+                </div>
+                <div class="compare-box after">
+                    <div class="compare-label">✅ POSITIVE INSTRUCTIONS</div>
+                    <pre>You are a movie recommender. Recommend from the top global trending movies. If you can't find one, say "Sorry, no movie today."
+
+Customer: Recommend me a movie.
+Agent:</pre>
+                    <div class="output-label">Output:</div>
+                    <div class="output-text">
+                        "Here are the top trending movies right now: [list]. I
+                        hope you find one you like!"
+                    </div>
+                    <div class="verdict">
+                        ✅ AI followed the positive direction perfectly
+                    </div>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(3)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(5)"
+                    >See Cheat Sheet →</button
+                >
+            </div>
+        </div>
+
+        <!-- CHEAT SHEET -->
+        <div class="cheatsheet" id="tip-5">
+            <h2
+                style="font-size:1.2rem; color:#fff; margin-bottom:1rem; text-align:center;"
+            >
+                📋 Full Cheat Sheet — 5 Tips at a Glance
+            </h2>
+            <div class="cheat-grid">
+                <div class="cheat-card">
+                    <h4>🚀 1. Start Simple</h4>
+                    <p>
+                        Start with the simplest version of your prompt. Test it,
+                        then add details one at a time. Don't try to be perfect
+                        on the first try.
+                    </p>
+                    <div class="example">Write → test → improve → repeat</div>
+                </div>
+                <div class="cheat-card">
+                    <h4>📋 2. Use Clear Instructions</h4>
+                    <p>
+                        Start with a strong verb. Use ### to separate
+                        instruction from content. Put the instruction first.
+                    </p>
+                    <div class="example">
+                        ### Instruction ### Translate to Spanish: Text: "hello!"
+                    </div>
+                </div>
+                <div class="cheat-card">
+                    <h4>🎯 3. Be Specific</h4>
+                    <p>
+                        Describe the exact format, audience, and style you want.
+                        Include an output format example when possible.
+                    </p>
+                    <div class="example">
+                        Desired format: Place: &lt;comma_separated_list&gt;
+                    </div>
+                </div>
+                <div class="cheat-card">
+                    <h4>✂️ 4. Avoid Vagueness</h4>
+                    <p>
+                        Replace fuzzy words with concrete ones. Numbers beat
+                        adjectives every time.
+                    </p>
+                    <div class="example">
+                        "short" → "2-3 sentences" "simple" → "for a 10-year-old"
+                    </div>
+                </div>
+                <div class="cheat-card" style="grid-column: span 2;">
+                    <h4>✅ 5. Say What TO Do (Not What NOT To Do)</h4>
+                    <p>
+                        Positive instructions are more effective. Instead of
+                        "DON'T ask for preferences", say "Recommend from
+                        trending movies only."
+                    </p>
+                    <div class="example">
+                        ❌ DO NOT ask for interests ✅ Recommend from the top 10
+                        global trending movies
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-banner" style="margin-top:1.2rem;">
+                <span style="font-size:1.4rem; flex-shrink:0;">💡</span>
+                <p>
+                    <strong>The Golden Rule:</strong> A great prompt is like a great
+                    job description — specific enough that there's only one way to
+                    interpret it, but not so long that it becomes overwhelming. Start
+                    simple, be specific, use positive instructions.
+                </p>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(4)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(0)"
+                    >↩ Start Over</button
+                >
+            </div>
+        </div>
+    </div>
+</Layout>
+<style>
+    .container {
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        transition: background 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+        display: flex;
+        gap: 0.4rem;
+        margin-bottom: 2rem;
+    }
+    .progress-step {
+        flex: 1;
+        height: 5px;
+        border-radius: 3px;
+        background: #2d3348;
+        transition: background 0.3s;
+        cursor: pointer;
+    }
+    .progress-step.done {
+        background: #6366f1;
+    }
+
+    /* Tip navigation */
+    .tip-nav {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+        justify-content: center;
+    }
+    .tip-btn {
+        padding: 0.45rem 1rem;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .tip-btn.active {
+        background: #6366f1;
+        color: #fff;
+        border-color: #6366f1;
+    }
+    .tip-btn.visited {
+        border-color: #4f46e5;
+        color: #a78bfa;
+    }
+
+    /* Tip card */
+    .tip-card {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    .tip-card.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .tip-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+    .tip-number {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #6366f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .tip-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+    }
+    .tip-desc {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.65;
+        margin-bottom: 1.2rem;
+    }
+    .tip-hint {
+        font-size: 0.82rem;
+        background: #1e1f3a;
+        border-left: 3px solid #6366f1;
+        color: #a78bfa;
+        padding: 0.6rem 1rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 1.4rem;
+        line-height: 1.55;
+    }
+    .tip-hint strong {
+        color: #c7d2fe;
+    }
+
+    /* Before / After */
+    .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+    }
+    @media (max-width: 600px) {
+        .compare {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .compare-box {
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+    }
+    .compare-box.before {
+        background: #1e1515;
+        border: 1px solid #5c2626;
+    }
+    .compare-box.after {
+        background: #131e15;
+        border: 1px solid #1a5c30;
+    }
+    .compare-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.7rem;
+    }
+    .before .compare-label {
+        color: #f87171;
+    }
+    .after .compare-label {
+        color: #4ade80;
+    }
+    .compare-box pre {
+        font-family: monospace;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        line-height: 1.75;
+        color: #cbd5e1;
+        background: #0f1117;
+        border-radius: 8px;
+        padding: 0.75rem 0.9rem;
+    }
+    .compare-box .verdict {
+        font-size: 0.78rem;
+        margin-top: 0.6rem;
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    .before .verdict {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+    .after .verdict {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .output-label {
+        font-size: 0.7rem;
+        color: #64748b;
+        margin-top: 0.6rem;
+        margin-bottom: 0.2rem;
+    }
+    .output-text {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        font-style: italic;
+    }
+
+    /* Rule box */
+    .rule-box {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.4rem;
+    }
+    .rule-box h4 {
+        font-size: 0.85rem;
+        color: #fff;
+        margin-bottom: 0.6rem;
+    }
+    .rule-list {
+        list-style: none;
+    }
+    .rule-list li {
+        font-size: 0.83rem;
+        color: #94a3b8;
+        padding: 0.3rem 0;
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+    .rule-list li::before {
+        content: "→";
+        color: #6366f1;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    /* Navigation buttons */
+    .nav-btns {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+    }
+    .nav-btn {
+        padding: 0.55rem 1.4rem;
+        border-radius: 10px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #94a3b8;
+        transition: all 0.2s;
+    }
+    .nav-btn:hover {
+        background: #2d3348;
+        color: #e2e8f0;
+    }
+    .nav-btn.primary {
+        background: #6366f1;
+        border-color: #6366f1;
+        color: #fff;
+    }
+    .nav-btn.primary:hover {
+        background: #4f46e5;
+    }
+    .nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    /* Cheatsheet */
+    .cheatsheet {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    .cheatsheet.active {
+        display: block;
+    }
+    .cheat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+    @media (max-width: 580px) {
+        .cheat-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .cheat-card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        border-top: 3px solid #6366f1;
+    }
+    .cheat-card h4 {
+        font-size: 0.88rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
+    .cheat-card p {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        line-height: 1.55;
+    }
+    .cheat-card .example {
+        font-family: monospace;
+        font-size: 0.75rem;
+        background: #12151f;
+        border-radius: 6px;
+        padding: 0.4rem 0.7rem;
+        margin-top: 0.5rem;
+        color: #a78bfa;
+    }
+
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+</style>
+<script is:inline>
+    let current = 0;
+    const total = 6;
+    const visited = new Set([0]);
+
+    function goTo(n) {
+        const currentTip = document.getElementById("tip-" + current);
+        if (currentTip) {
+            currentTip.classList.remove("active");
+        }
+        const currentBtn = document.getElementById("btn-" + current);
+        if (currentBtn) {
+            currentBtn.classList.remove("active");
+        }
+
+        current = n;
+        visited.add(n);
+
+        const el = document.getElementById("tip-" + n);
+        if (el) {
+            el.classList.add("active");
+        }
+        const btn = document.getElementById("btn-" + n);
+        if (btn) {
+            btn.classList.add("active");
+            btn.classList.add("visited");
+        }
+
+        // Update progress
+        document.querySelectorAll(".progress-step").forEach((s, i) => {
+            if (s) {
+                s.classList.toggle("done", visited.has(i));
+            }
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+</script>

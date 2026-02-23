@@ -1,17 +1,74 @@
 ---
-
+import Layout from '../layouts/Layout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+    <div class="hero">
+        <h1>Welcome to LLM Learning</h1>
+        <p>Your interactive guide to the world of Large Language Models.</p>
+    </div>
+    <div class="page-cards">
+        <a href="/basics-of-prompting" class="card">
+            <h2>✍️ Basics of Prompting</h2>
+            <p>Learn how to talk to an AI effectively.</p>
+        </a>
+        <a href="/prompt-elements" class="card">
+            <h2>🧩 Elements of a Prompt</h2>
+            <p>Discover the building blocks of a great prompt.</p>
+        </a>
+        <a href="/prompt-tips" class="card">
+            <h2>💡 Prompting Tips</h2>
+            <p>Practical rules for designing effective prompts.</p>
+        </a>
+        <a href="/llm-settings" class="card">
+            <h2>🎛️ LLM Settings</h2>
+            <p>Explore how to tweak model behavior.</p>
+        </a>
+    </div>
+</Layout>
+
+<style>
+    .hero {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 1rem;
+    }
+    .hero p {
+        font-size: 1.2rem;
+        color: #94a3b8;
+    }
+    .page-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 0 2rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 2rem;
+        text-decoration: none;
+        color: #e2e8f0;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .card h2 {
+        font-size: 1.5rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
+    .card p {
+        font-size: 1rem;
+        color: #94a3b8;
+    }
+</style>
