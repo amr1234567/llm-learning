@@ -1,0 +1,723 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Zero-Shot Prompting">
+    <div class="container">
+        <h1>⚡ Zero-Shot Prompting</h1>
+        <p class="subtitle">
+            Ask the AI to do something it was never explicitly trained to do —
+            and it just works. Here's why, when, and when it doesn't.
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/techniques/zeroshot"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Core concept -->
+        <div class="section-title">💡 What Is Zero-Shot Prompting?</div>
+        <div class="core-card">
+            <h3>No examples. No training. Just ask — and it works.</h3>
+            <p>
+                Zero-shot means you give the AI a task <strong
+                    style="color:#e2e8f0;">with zero examples</strong
+                >. You don't show it "here's what a correct answer looks like."
+                You just ask, and it answers — because it already knows enough
+                from being trained on massive amounts of text.
+            </p>
+            <div class="analogy">
+                🧠 <strong>Analogy:</strong> Imagine hiring someone who has read every
+                book ever written. You say "classify this review as positive or negative"
+                — they just do it, without needing you to show examples first. That's
+                zero-shot. The AI's training is its experience.
+            </div>
+        </div>
+
+        <!-- The example -->
+        <div class="section-title">📋 The Example from the Page</div>
+        <div class="prompt-wrap">
+            <div class="lbl">ZERO-SHOT PROMPT — no examples provided</div>
+            <pre>Classify the text into neutral, negative or positive.
+
+Text: I think the vacation is okay.
+Sentiment:</pre>
+        </div>
+        <div class="output-wrap">
+            <div class="lbl">OUTPUT</div>
+            <pre>Neutral</pre>
+        </div>
+        <p
+            style="font-size:0.84rem; color:#94a3b8; line-height:1.65; margin-bottom:1rem;"
+        >
+            No examples were given. The AI wasn't shown what "neutral" looks
+            like. It just understood — because it has seen millions of sentiment
+            examples during training. It already knows what sentiment
+            classification is, what these three labels mean, and how to apply
+            them.
+        </p>
+
+        <!-- Why it works -->
+        <div class="section-title">
+            🔬 Why Does Zero-Shot Even Work? — The "Under the Hood" Story
+        </div>
+        <p
+            style="font-size:0.84rem; color:#94a3b8; margin-bottom:1rem; line-height:1.65;"
+        >
+            The page mentions two concepts — <strong style="color:#e2e8f0;"
+                >Instruction Tuning</strong
+            > and <strong style="color:#e2e8f0;">RLHF</strong> — without fully explaining
+            them. Here's what they actually mean:
+        </p>
+
+        <div class="concept-row">
+            <div class="concept-box it">
+                <h4>🎓 Instruction Tuning</h4>
+                <p>
+                    After initial training, the model is fine-tuned on thousands
+                    of examples of <em>instructions + correct responses</em>.
+                    Things like "Summarize this → [good summary]", "Translate
+                    this → [good translation]". This teaches the model to follow
+                    any instruction format, not just ones it literally saw.
+                </p>
+                <div class="analogy">
+                    Like training an intern by giving them 10,000 varied tasks
+                    with correct answers — they learn how to handle new tasks
+                    they've never seen before.
+                </div>
+            </div>
+            <div class="concept-box rlhf">
+                <h4>🤝 RLHF — Reinforcement Learning from Human Feedback</h4>
+                <p>
+                    Human raters compare AI responses and pick which is better.
+                    The AI learns to produce responses humans prefer — more
+                    helpful, more accurate, less robotic. This is what makes
+                    ChatGPT, Claude, and GPT-4 feel natural to talk to, not just
+                    technically correct.
+                </p>
+                <div class="analogy">
+                    Like giving a student a grade not by comparing to a textbook
+                    answer, but by asking 100 real people "which response is
+                    better?" — the student learns human preferences.
+                </div>
+            </div>
+        </div>
+
+        <!-- The pipeline -->
+        <div class="section-title">
+            🏗️ How the AI Gets Zero-Shot Capability — The Full Pipeline
+        </div>
+        <div class="pipeline">
+            <div class="pipe-step">
+                <div class="ps-icon">📚</div>
+                <div class="ps-title">Pre-training</div>
+                <div class="ps-desc">
+                    Reads billions of web pages, books, code — learns language
+                    patterns
+                </div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="ps-icon">🎓</div>
+                <div class="ps-title">Instruction Tuning</div>
+                <div class="ps-desc">
+                    Fine-tuned on instruction-following datasets to understand
+                    tasks
+                </div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="ps-icon">🤝</div>
+                <div class="ps-title">RLHF</div>
+                <div class="ps-desc">
+                    Humans rank responses — model learns what "good" actually
+                    means
+                </div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step" style="border-color:#6366f1;">
+                <div class="ps-icon">⚡</div>
+                <div class="ps-title">Zero-Shot Ready</div>
+                <div class="ps-desc">
+                    Can now handle new tasks with just an instruction — no
+                    examples needed
+                </div>
+            </div>
+        </div>
+
+        <!-- When it works vs when it fails -->
+        <div class="section-title">
+            ✅ When Zero-Shot Works vs ❌ When It Fails
+        </div>
+        <div class="wf-grid">
+            <div class="wf-card works">
+                <h4>✅ Zero-Shot Works Great For…</h4>
+                <ul>
+                    <li>
+                        Common tasks the AI has seen millions of times
+                        (sentiment, translation, summarization)
+                    </li>
+                    <li>
+                        Clear, well-defined instructions with obvious expected
+                        outputs
+                    </li>
+                    <li>General knowledge questions</li>
+                    <li>Simple classification with well-known labels</li>
+                    <li>
+                        Writing tasks with common formats (emails, summaries,
+                        titles)
+                    </li>
+                </ul>
+            </div>
+            <div class="wf-card fails">
+                <h4>❌ Zero-Shot Struggles With…</h4>
+                <ul>
+                    <li>
+                        Custom or unusual output formats (your own label names,
+                        JSON schemas)
+                    </li>
+                    <li>Multi-step reasoning problems (math, logic puzzles)</li>
+                    <li>Domain-specific tasks the AI hasn't been trained on</li>
+                    <li>
+                        Very strict output constraints ("respond in exactly 3
+                        words")
+                    </li>
+                    <li>
+                        Nuanced tasks where "correct" is subjective or
+                        context-specific
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Zero-shot vs Few-shot toggle -->
+        <div class="section-title">🆚 Zero-Shot vs Few-Shot — Side by Side</div>
+        <div class="toggle-wrap">
+            <h4>Click to compare the same task done both ways:</h4>
+            <div class="toggle-btns">
+                <div
+                    class="toggle-btn active"
+                    onclick="toggleMode('zero', this)"
+                >
+                    ⚡ Zero-Shot
+                </div>
+                <div class="toggle-btn" onclick="toggleMode('few', this)">
+                    📎 Few-Shot
+                </div>
+            </div>
+            <div class="toggle-content active" id="mode-zero">
+                <div class="prompt-wrap">
+                    <div class="lbl">
+                        ZERO-SHOT — Just the instruction, no examples
+                    </div>
+                    <pre>Classify the text into neutral, negative or positive.
+
+Text: I think the vacation is okay.
+Sentiment:</pre>
+                </div>
+                <div class="output-wrap">
+                    <div class="lbl">OUTPUT</div>
+                    <pre>Neutral  (capital N — AI used its own format preference)</pre>
+                </div>
+                <p style="font-size:0.81rem; color:#94a3b8; margin-top:0.5rem;">
+                    Works, but output format is unpredictable. AI decides how to
+                    present the answer.
+                </p>
+            </div>
+            <div class="toggle-content" id="mode-few">
+                <div class="prompt-wrap">
+                    <div class="lbl">
+                        FEW-SHOT — Same task + 1 example to lock in format
+                    </div>
+                    <pre>Classify the text into neutral, negative or positive.
+
+Text: I think the vacation is okay.
+Sentiment: neutral
+
+Text: I think the food was okay.
+Sentiment:</pre>
+                </div>
+                <div class="output-wrap">
+                    <div class="lbl">OUTPUT</div>
+                    <pre>neutral  (lowercase — copied from the example exactly)</pre>
+                </div>
+                <p style="font-size:0.81rem; color:#94a3b8; margin-top:0.5rem;">
+                    Output format is now locked. The example teaches the AI the
+                    exact style you want.
+                </p>
+            </div>
+        </div>
+
+        <!-- Decision tree: Should I use zero-shot? -->
+        <div class="section-title">
+            🤔 Should I Use Zero-Shot? — Decision Guide
+        </div>
+        <div class="decision">
+            <h4>Ask yourself these questions:</h4>
+            <div class="d-row">
+                <div class="d-q">
+                    Is this a common, general task? (translation, summarization,
+                    sentiment...)
+                </div>
+                <div class="d-arrow">→</div>
+                <div class="d-a yes">
+                    ✅ Yes → Try zero-shot first. It probably works.
+                </div>
+            </div>
+            <div class="d-row">
+                <div class="d-q">
+                    Do I need the output in a very specific format or use custom
+                    labels?
+                </div>
+                <div class="d-arrow">→</div>
+                <div class="d-a no">
+                    ❌ Yes → Use few-shot. Add at least 1 example showing the
+                    format.
+                </div>
+            </div>
+            <div class="d-row">
+                <div class="d-q">
+                    Did zero-shot give me a wrong or messy answer?
+                </div>
+                <div class="d-arrow">→</div>
+                <div class="d-a no">
+                    ❌ Yes → Switch to few-shot and add 2-3 examples.
+                </div>
+            </div>
+            <div class="d-row">
+                <div class="d-q">
+                    Does the task require multi-step reasoning or math?
+                </div>
+                <div class="d-arrow">→</div>
+                <div class="d-a no">
+                    ❌ Yes → Use Chain-of-Thought prompting (coming next).
+                    Zero-shot will likely fail.
+                </div>
+            </div>
+            <div class="d-row">
+                <div class="d-q">
+                    Is this for a quick prototype or internal tool?
+                </div>
+                <div class="d-arrow">→</div>
+                <div class="d-a yes">
+                    ✅ Yes → Zero-shot is fast, costs fewer tokens, good enough
+                    to test.
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-banner">
+            <span style="font-size:1.4rem; flex-shrink:0;">💡</span>
+            <p>
+                <strong>Key Takeaway:</strong> Zero-shot is your <strong
+                    >first attempt</strong
+                > — fast, simple, no extra setup. If it works, great. If the output
+                is wrong or oddly formatted, that's your signal to switch to few-shot
+                (add examples). Think of zero-shot as "does the AI already know how
+                to do this?" and few-shot as "let me show it exactly what I want."
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #a78bfa;
+        margin: 2rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #2d3348;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 1.75rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.93rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.83rem;
+        transition: background 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Core concept */
+    .core-card {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 14px;
+        padding: 1.4rem 1.6rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #6366f1;
+    }
+    .core-card h3 {
+        font-size: 1.05rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
+    .core-card p {
+        font-size: 0.86rem;
+        color: #94a3b8;
+        line-height: 1.7;
+    }
+    .core-card .analogy {
+        margin-top: 0.8rem;
+        background: #12151f;
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-size: 0.83rem;
+        color: #a78bfa;
+        font-style: italic;
+        line-height: 1.6;
+    }
+
+    /* The "Why it works" pipeline */
+    .pipeline {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin: 1.2rem 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .pipe-step {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        text-align: center;
+        min-width: 130px;
+        flex: 1;
+    }
+    .pipe-step .ps-icon {
+        font-size: 1.6rem;
+        margin-bottom: 0.4rem;
+    }
+    .pipe-step .ps-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.25rem;
+    }
+    .pipe-step .ps-desc {
+        font-size: 0.7rem;
+        color: #64748b;
+        line-height: 1.4;
+    }
+    .pipe-arrow {
+        color: #3b4268;
+        font-size: 1.4rem;
+        padding: 0 0.3rem;
+        flex-shrink: 0;
+    }
+    @media (max-width: 600px) {
+        .pipe-arrow {
+            display: none;
+        }
+        .pipe-step {
+            min-width: 100px;
+        }
+    }
+
+    /* Prompt example */
+    .prompt-wrap {
+        background: #12151f;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin: 0.8rem 0;
+    }
+    .prompt-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+    .prompt-wrap pre {
+        font-family: monospace;
+        font-size: 0.82rem;
+        white-space: pre-wrap;
+        line-height: 1.75;
+        color: #c7d2fe;
+    }
+    .output-wrap {
+        background: #111a14;
+        border-radius: 10px;
+        padding: 0.8rem 1.2rem;
+        margin: 0.4rem 0 1rem;
+    }
+    .output-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #4ade8066;
+        margin-bottom: 0.3rem;
+    }
+    .output-wrap pre {
+        font-family: monospace;
+        font-size: 0.82rem;
+        color: #86efac;
+    }
+
+    /* Works / Fails grid */
+    .wf-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    @media (max-width: 580px) {
+        .wf-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .wf-card {
+        background: #1e2130;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+    }
+    .wf-card.works {
+        border-top: 3px solid #059669;
+    }
+    .wf-card.fails {
+        border-top: 3px solid #e11d48;
+    }
+    .wf-card h4 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+    }
+    .wf-card.works h4 {
+        color: #4ade80;
+    }
+    .wf-card.fails h4 {
+        color: #fb7185;
+    }
+    .wf-card ul {
+        padding-left: 1rem;
+    }
+    .wf-card li {
+        font-size: 0.81rem;
+        color: #94a3b8;
+        line-height: 1.65;
+        margin-bottom: 2px;
+    }
+
+    /* Concepts: Instruction Tuning + RLHF */
+    .concept-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    @media (max-width: 580px) {
+        .concept-row {
+            grid-template-columns: 1fr;
+        }
+    }
+    .concept-box {
+        background: #1e2130;
+        border-radius: 12px;
+        padding: 1.1rem 1.3rem;
+        border-top: 3px solid;
+    }
+    .concept-box.it {
+        border-color: #7c3aed;
+    }
+    .concept-box.rlhf {
+        border-color: #0891b2;
+    }
+    .concept-box h4 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+    }
+    .concept-box.it h4 {
+        color: #a78bfa;
+    }
+    .concept-box.rlhf h4 {
+        color: #38bdf8;
+    }
+    .concept-box p {
+        font-size: 0.81rem;
+        color: #94a3b8;
+        line-height: 1.65;
+    }
+    .concept-box .analogy {
+        margin-top: 0.6rem;
+        font-size: 0.79rem;
+        color: #64748b;
+        font-style: italic;
+        border-top: 1px solid #2d3348;
+        padding-top: 0.5rem;
+    }
+
+    /* Zero vs Few interactive */
+    .toggle-wrap {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.3rem;
+        margin: 1rem 0;
+    }
+    .toggle-wrap h4 {
+        font-size: 0.9rem;
+        color: #fff;
+        margin-bottom: 1rem;
+    }
+    .toggle-btns {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .toggle-btn {
+        padding: 0.4rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #12151f;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .toggle-btn.active {
+        background: #6366f1;
+        color: #fff;
+        border-color: #6366f1;
+    }
+    .toggle-content {
+        display: none;
+    }
+    .toggle-content.active {
+        display: block;
+        animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Decision tree */
+    .decision {
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin: 1rem 0;
+    }
+    .decision h4 {
+        font-size: 0.88rem;
+        color: #fff;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .d-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid #1e2130;
+    }
+    .d-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .d-q {
+        background: #1e2130;
+        border-radius: 8px;
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+        color: #e2e8f0;
+        flex: 1;
+    }
+    .d-arrow {
+        color: #6366f1;
+        font-size: 1rem;
+        padding-top: 6px;
+        flex-shrink: 0;
+    }
+    .d-a {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        flex: 1.2;
+        line-height: 1.5;
+    }
+    .d-a.yes {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .d-a.no {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+</style>
+
+<script is:inline>
+    function toggleMode(mode, btn) {
+        document
+            .querySelectorAll(".toggle-content")
+            .forEach((el) => el.classList.remove("active"));
+        document
+            .querySelectorAll(".toggle-btn")
+            .forEach((el) => el.classList.remove("active"));
+        document.getElementById("mode-" + mode).classList.add("active");
+        btn.classList.add("active");
+    }
+</script>

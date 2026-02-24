@@ -1,0 +1,1204 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Chain-of-Thought Prompting">
+    <div class="container">
+        <h1>🧠 Chain-of-Thought Prompting</h1>
+        <p class="subtitle">
+            Make the AI show its work — and watch accuracy skyrocket on complex
+            reasoning tasks
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/techniques/cot"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Variant tabs -->
+        <div class="vtabs">
+            <div class="vtab v1 active" onclick="showV(0, this)">
+                🧠 CoT Prompting (Few-shot)
+            </div>
+            <div class="vtab v2" onclick="showV(1, this)">⚡ Zero-shot CoT</div>
+            <div class="vtab v3" onclick="showV(2, this)">🤖 Auto-CoT</div>
+            <div
+                class="vtab"
+                onclick="showV(3, this)"
+                style="border-color:#3b4268;color:#94a3b8;"
+            >
+                📊 Compare All 3
+            </div>
+        </div>
+
+        <!-- ===== VARIANT 1: CoT FEW-SHOT ===== -->
+        <div class="vpage active" id="vp-0">
+            <div class="section-title">💡 What Is CoT Prompting?</div>
+            <div class="card purple">
+                <h3>
+                    Don't just show input→output. Show input→<em>reasoning</em
+                    >→output.
+                </h3>
+                <p>
+                    Standard few-shot shows the AI "here's the answer." CoT
+                    shows the AI "here's how I got the answer." This forces the
+                    AI to build a <strong style="color:#e2e8f0;"
+                        >reasoning chain</strong
+                    > — a sequence of intermediate thinking steps — before arriving
+                    at the final answer. That reasoning chain is what fixes the math
+                    and logic failures we saw in few-shot.
+                </p>
+                <div class="analogy" style="color:#a78bfa;">
+                    🧠 <strong>Analogy:</strong> Remember in school when the teacher
+                    said "show your work"? That's CoT. The AI can get the right answer
+                    by accident, but when it's forced to show its work, every step
+                    is a check — and mistakes become visible and correctable.
+                </div>
+            </div>
+
+            <!-- The core before/after -->
+            <div class="section-title">
+                ⚡ The Exact Problem Few-Shot Failed — Now Fixed
+            </div>
+            <div class="ba-wrap">
+                <h4>The same math task — compare what changes:</h4>
+                <div class="ba-btns">
+                    <div
+                        class="ba-btn before active"
+                        onclick="showBA('before', this)"
+                    >
+                        ❌ Few-shot (no reasoning)
+                    </div>
+                    <div class="ba-btn after" onclick="showBA('after', this)">
+                        ✅ CoT (with reasoning steps)
+                    </div>
+                </div>
+                <div class="ba-content active" id="ba-before">
+                    <div class="prompt-wrap">
+                        <div class="lbl">
+                            FEW-SHOT — shows only answers, no reasoning
+                        </div>
+                        <pre>The odd numbers in this group add up to an even number: 4, 8, 9, 15, 12, 2, 1.
+A: The answer is False.
+
+The odd numbers in this group add up to an even number: 17, 10, 19, 4, 8, 12, 24.
+A: The answer is True.
+
+The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1.
+A:</pre>
+                    </div>
+                    <div class="output-wrap wrong">
+                        <div class="lbl">OUTPUT — WRONG ❌</div>
+                        <pre>The answer is True.  ← Wrong! AI just guessed the pattern, never did the math</pre>
+                    </div>
+                    <p style="font-size:0.8rem;color:#f87171;">
+                        The AI saw "True/False" pattern in examples and
+                        pattern-matched. It never actually identified the odd
+                        numbers or added them up.
+                    </p>
+                </div>
+                <div class="ba-content" id="ba-after">
+                    <div class="prompt-wrap">
+                        <div class="lbl">
+                            COT — shows the reasoning chain in each example
+                        </div>
+                        <pre>The odd numbers in this group add up to an even number: 4, 8, 9, 15, 12, 2, 1.
+A: <span class="hl-steps">Adding all the odd numbers (9, 15, 1) gives 25.</span> <span class="hl-answer">The answer is False.</span>
+
+The odd numbers in this group add up to an even number: 17, 10, 19, 4, 8, 12, 24.
+A: <span class="hl-steps">Adding all the odd numbers (17, 19) gives 36.</span> <span class="hl-answer">The answer is True.</span>
+
+The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1.
+A:</pre>
+                    </div>
+                    <div class="output-wrap">
+                        <div class="lbl">OUTPUT — CORRECT ✅</div>
+                        <pre><span class="hl-steps">Adding all the odd numbers (15, 5, 13, 7, 1) gives 41.</span> <span class="hl-answer">The answer is False.</span></pre>
+                    </div>
+                    <p style="font-size:0.8rem;color:#4ade80;">
+                        The AI replicated the reasoning pattern — it identified
+                        odd numbers, added them, then decided. Each step is
+                        visible and verifiable. Even 1 CoT example is enough!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Why it works -->
+            <div class="section-title">
+                🔬 Why Does Showing Reasoning Actually Fix the Answer?
+            </div>
+            <p
+                style="font-size:0.84rem;color:#94a3b8;line-height:1.68;margin-bottom:1rem;"
+            >
+                The page mentions this is an <strong style="color:#e2e8f0;"
+                    >"emergent ability"</strong
+                > — it only works on sufficiently large models. Here's the real explanation
+                of why the reasoning chain helps:
+            </p>
+            <div class="two-col">
+                <div class="card purple">
+                    <h3>🧮 The "Scratch Pad" Effect</h3>
+                    <p>
+                        When the AI writes "Adding all the odd numbers (15, 5,
+                        13, 7, 1) gives 41", those intermediate words <strong
+                            style="color:#e2e8f0;"
+                            >become part of the context</strong
+                        > the AI reads as it generates. It's essentially using its
+                        own output as a working memory — like writing on scratch paper.
+                        Each step informs the next.
+                    </p>
+                </div>
+                <div class="card green">
+                    <h3>🔒 Commitment Forces Accuracy</h3>
+                    <p>
+                        By writing out "odd numbers are (15, 5, 13, 7, 1)", the
+                        AI locks itself into those values. Now it must add them
+                        correctly or the contradiction becomes obvious. The
+                        reasoning chain acts like a self-check — the AI can't
+                        easily jump to a wrong answer without the steps being
+                        wrong first.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dissect">
+                <div class="dp used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Few-shot CoT:</strong> examples show input → reasoning
+                            steps → answer
+                        </li>
+                        <li>
+                            <strong>Step decomposition:</strong> "identify odd numbers
+                            → add them → conclude"
+                        </li>
+                        <li>
+                            <strong>Only 1 example needed</strong> — the reasoning
+                            pattern transfers immediately
+                        </li>
+                        <li>
+                            The reasoning format itself acts as an output
+                            indicator
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            AI now actually does the math instead of
+                            pattern-matching
+                        </li>
+                        <li>
+                            Output is transparent — you can see exactly where it
+                            reasoned right or wrong
+                        </li>
+                        <li>
+                            Answer changed from wrong (True) to correct (False)
+                        </li>
+                        <li>Reasoning chain = built-in explainability</li>
+                    </ul>
+                </div>
+                <div class="dp violate">
+                    <h4>💥 What breaks if you remove the steps?</h4>
+                    <ul>
+                        <li>
+                            Remove reasoning from examples → AI pattern-matches
+                            labels again → wrong answers
+                        </li>
+                        <li>
+                            Partial steps ("it adds to 41") without
+                            identification → AI might miscalculate the sum
+                        </li>
+                        <li>
+                            Use CoT on tiny models → doesn't work — it's an
+                            emergent ability of large models only
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            CoT is most powerful for: math, logic puzzles,
+                            multi-step word problems, code debugging, legal
+                            reasoning
+                        </li>
+                        <li>
+                            For your EdTech: generate worked math solutions
+                            students can follow step by step — not just the
+                            answer
+                        </li>
+                        <li>
+                            Also useful for: "explain why this code has a bug" —
+                            forces the AI to trace logic
+                        </li>
+                        <li>
+                            The output reasoning chain doubles as an explanation
+                            feature — great for tutoring apps
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VARIANT 2: ZERO-SHOT COT ===== -->
+        <div class="vpage" id="vp-1">
+            <div class="section-title">
+                ⚡ Zero-Shot CoT — The Magic 5-Word Phrase
+            </div>
+
+            <div class="magic-box">
+                <div class="magic-phrase">"Let's think step by step."</div>
+                <p>
+                    That's it. Adding these 5 words to the end of any prompt
+                    triggers the AI to generate its own reasoning chain — <strong
+                        style="color:#e2e8f0;">no examples needed.</strong
+                    > Research by Kojima et al. (2022) showed this simple addition
+                    dramatically improves accuracy on reasoning tasks.
+                </p>
+            </div>
+
+            <!-- Before/after apple problem -->
+            <div class="section-title">
+                🍎 The Apple Problem — Before vs After
+            </div>
+            <div class="two-col">
+                <div>
+                    <div class="prompt-wrap">
+                        <div class="lbl">❌ WITHOUT the magic phrase</div>
+                        <pre>I went to the market and bought 10 apples. I gave 2 apples to the neighbor and 2 to the repairman. I then went and bought 5 more apples and ate 1. How many apples did I remain with?</pre>
+                    </div>
+                    <div class="output-wrap wrong">
+                        <div class="lbl">
+                            OUTPUT — WRONG
+                        </div><pre>11 apples</pre>
+                    </div>
+                    <p
+                        style="font-size:0.79rem;color:#f87171;margin-top:0.3rem;"
+                    >
+                        AI jumped straight to a wrong answer. No reasoning
+                        shown.
+                    </p>
+                </div>
+                <div>
+                    <div class="prompt-wrap">
+                        <div class="lbl">✅ WITH the magic phrase appended</div>
+                        <pre>I went to the market and bought 10 apples. I gave 2 apples to the neighbor and 2 to the repairman. I then went and bought 5 more apples and ate 1. How many apples did I remain with?
+
+<span class="hl-magic">Let's think step by step.</span></pre>
+                    </div>
+                    <div class="output-wrap">
+                        <div class="lbl">OUTPUT — CORRECT ✅</div>
+                        <pre>First, you started with 10 apples.
+You gave away 2+2=4, so 6 left.
+Then bought 5 more → 11 apples.
+Ate 1 → 10 apples remaining.</pre>
+                    </div>
+                    <p
+                        style="font-size:0.79rem;color:#4ade80;margin-top:0.3rem;"
+                    >
+                        AI built its own chain — and got the right answer: 10.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dissect">
+                <div class="dp used">
+                    <h4>🔮 What technique was used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Zero-shot CoT:</strong> no examples, just the
+                            trigger phrase appended to the prompt
+                        </li>
+                        <li>
+                            The phrase "Let's think step by step" is a <strong
+                                >meta-instruction</strong
+                            > — it tells the AI <em>how</em> to think, not what to
+                            think
+                        </li>
+                        <li>
+                            Acts like the few-shot CoT examples but without
+                            writing them
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            AI generated its own intermediate steps
+                            automatically
+                        </li>
+                        <li>
+                            Each step became part of the context for the next —
+                            like a self-built scratch pad
+                        </li>
+                        <li>Answer flipped from wrong (11) to correct (10)</li>
+                        <li>
+                            Output is now a transparent, readable reasoning
+                            trace
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove the phrase → AI jumps to a single-token
+                            answer, often wrong
+                        </li>
+                        <li>
+                            Use "think carefully" instead → weaker effect —
+                            "step by step" is the specific trigger that works
+                            best
+                        </li>
+                        <li>
+                            Use on simple factual questions → unnecessary; only
+                            useful when the task has multiple steps
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            <strong>Other effective variants:</strong> "Let's solve
+                            this step by step.", "Think through this carefully.",
+                            "Walk me through your reasoning."
+                        </li>
+                        <li>
+                            Zero-shot CoT is perfect when you don't have time to
+                            write examples but still need correct reasoning
+                        </li>
+                        <li>
+                            Combine with output indicator: "...Let's think step
+                            by step. Final answer:"
+                        </li>
+                        <li>
+                            For your .NET API: append this phrase dynamically in
+                            your prompt-building code for any math/logic feature
+                        </li>
+                        <li>
+                            Research shows this works better than few-shot on
+                            some tasks because it doesn't anchor to
+                            example-specific patterns
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Why "step by step" specifically? -->
+            <div class="card purple" style="margin-top:1rem;">
+                <h3>
+                    🤔 Why does "Let's think step by step" work so well
+                    specifically?
+                </h3>
+                <p>
+                    The phrase appears millions of times in the training data —
+                    in textbooks, tutorials, worked solutions, and teacher
+                    explanations. The AI has learned that this phrase is <strong
+                        style="color:#e2e8f0;"
+                        >always followed by methodical, structured reasoning</strong
+                    >. So when it sees it, it activates that pattern
+                    automatically. It's not magic — it's a trained association
+                    at a massive scale.
+                </p>
+                <div class="analogy" style="color:#a78bfa;">
+                    🧠 Like saying "once upon a time" triggers a storytelling
+                    mode, "let's think step by step" triggers a reasoning mode —
+                    because that's what always followed it in billions of
+                    training documents.
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VARIANT 3: AUTO-COT ===== -->
+        <div class="vpage" id="vp-2">
+            <div class="section-title">
+                🤖 Auto-CoT — When You Have Too Many Questions to Write Examples
+                For
+            </div>
+            <div class="card orange">
+                <h3>
+                    The problem: manually writing CoT examples is slow and
+                    error-prone.
+                </h3>
+                <p>
+                    Standard CoT needs you to hand-craft examples with reasoning
+                    chains. For a large dataset of questions, this is
+                    impractical. Auto-CoT (Zhang et al. 2022) automates this: it
+                    uses <strong style="color:#e2e8f0;"
+                        >"Let's think step by step."</strong
+                    > to automatically generate the reasoning chains for a diverse
+                    set of examples — then uses those as the few-shot demonstrations.
+                </p>
+                <div class="analogy" style="color:#fbbf24;">
+                    🧠 <strong>Analogy:</strong> Instead of a teacher writing 100
+                    worked examples by hand, Auto-CoT is like having the AI write
+                    its own worked examples — then double-checking them for quality
+                    before using them to teach itself.
+                </div>
+            </div>
+
+            <div class="section-title">
+                ⚙️ How Auto-CoT Works — Step by Step
+            </div>
+            <div class="pipeline">
+                <h4>The 2-Stage Pipeline</h4>
+                <div class="pipe-steps">
+                    <div class="pipe-step">
+                        <div class="ps-num c1">1</div>
+                        <div class="ps-body">
+                            <h5>Question Clustering</h5>
+                            <p>
+                                All questions in your dataset are grouped into
+                                clusters based on similarity. Each cluster
+                                represents a type of reasoning (e.g.,
+                                arithmetic, word problems, logic). This ensures
+                                the selected examples are <strong
+                                    style="color:#a78bfa;">diverse</strong
+                                > — not all the same type.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pipe-arrow">↓</div>
+                    <div class="pipe-step">
+                        <div class="ps-num c2">2</div>
+                        <div class="ps-body">
+                            <h5>Representative Question Selection</h5>
+                            <p>
+                                One question is picked from each cluster — the
+                                most "representative" one. Simple heuristics
+                                guide this: prefer questions under ~60 tokens,
+                                prefer those that need ~5 reasoning steps. This
+                                keeps examples clean and not overly complex.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pipe-arrow">↓</div>
+                    <div class="pipe-step">
+                        <div class="ps-num c3">3</div>
+                        <div class="ps-body">
+                            <h5>Automatic Chain Generation</h5>
+                            <p>
+                                Each selected question is sent to the model with
+                                "Let's think step by step" — generating a
+                                reasoning chain automatically. This replaces the
+                                need for manual human-written chains. The chain
+                                might not be perfect, but diversity across
+                                examples compensates for individual errors.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pipe-arrow">↓</div>
+                    <div class="pipe-step">
+                        <div class="ps-num c4">4</div>
+                        <div class="ps-body">
+                            <h5>Use as Few-Shot CoT Demonstrations</h5>
+                            <p>
+                                The automatically generated question+chain pairs
+                                become the few-shot examples for the final
+                                prompt. The model now has diverse,
+                                auto-generated CoT demonstrations — without any
+                                human effort.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dissect">
+                <div class="dp used">
+                    <h4>🔮 What's the key insight?</h4>
+                    <ul>
+                        <li>
+                            Diversity of examples matters more than perfection
+                            of any single example
+                        </li>
+                        <li>
+                            Zero-shot CoT ("Let's think step by step") is used
+                            as a sub-tool to generate the chains
+                        </li>
+                        <li>
+                            Clustering ensures examples cover a wide range of
+                            problem types
+                        </li>
+                        <li>
+                            Length/step heuristics filter out overly long or
+                            trivially short chains
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp effect">
+                    <h4>⚡ Why does diversity compensate for errors?</h4>
+                    <ul>
+                        <li>
+                            If one auto-generated chain has a mistake, the other
+                            diverse examples still anchor correct reasoning
+                            patterns
+                        </li>
+                        <li>
+                            Homogeneous examples amplify a single mistake —
+                            diverse examples dilute it
+                        </li>
+                        <li>
+                            The final model averages signal across all
+                            demonstrations, not just one
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp violate">
+                    <h4>💥 What breaks if you skip diversity?</h4>
+                    <ul>
+                        <li>
+                            All examples from the same cluster → model overfits
+                            to one reasoning pattern
+                        </li>
+                        <li>
+                            No quality heuristics → very long or trivial chains
+                            confuse the model
+                        </li>
+                        <li>
+                            Using Auto-CoT on small models → chain generation
+                            itself will be wrong, poisoning demonstrations
+                        </li>
+                    </ul>
+                </div>
+                <div class="dp bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            Auto-CoT is overkill for most day-to-day tasks — use
+                            it when building a system that processes <em
+                                >thousands</em
+                            > of varied questions
+                        </li>
+                        <li>
+                            For your EdTech: Auto-CoT could auto-generate worked
+                            solutions across a large bank of math problems at
+                            scale
+                        </li>
+                        <li>
+                            Think of it as "automated curriculum generation" —
+                            the AI builds its own teaching materials
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== COMPARE ALL 3 ===== -->
+        <div class="vpage" id="vp-3">
+            <div class="section-title">
+                📊 All 3 CoT Variants — Side by Side
+            </div>
+            <table class="cmp-table">
+                <tr>
+                    <th>Variant</th>
+                    <th>How It Works</th>
+                    <th>Examples Needed?</th>
+                    <th>Effort</th>
+                    <th>Best For</th>
+                </tr>
+                <tr>
+                    <td>🧠 CoT Few-shot</td>
+                    <td>Show examples with full reasoning chains included</td>
+                    <td>Yes — 1 to 5</td>
+                    <td
+                        ><span class="badge b-medium">Medium</span> — write examples
+                        manually</td
+                    >
+                    <td>Complex tasks where you know the reasoning pattern</td>
+                </tr>
+                <tr>
+                    <td>⚡ Zero-shot CoT</td>
+                    <td>Append "Let's think step by step" to any prompt</td>
+                    <td>No</td>
+                    <td><span class="badge b-easy">Easy</span> — add 5 words</td
+                    >
+                    <td>Quick fix on any reasoning problem, no prep time</td>
+                </tr>
+                <tr>
+                    <td>🤖 Auto-CoT</td>
+                    <td
+                        >AI auto-generates diverse CoT examples from a question
+                        dataset</td
+                    >
+                    <td>Auto-generated</td>
+                    <td
+                        ><span class="badge b-hard">Hard</span> — needs a dataset
+                        + pipeline</td
+                    >
+                    <td>Large-scale systems with hundreds of question types</td>
+                </tr>
+            </table>
+
+            <!-- When to use which -->
+            <div class="section-title">🤔 Which CoT Variant Should I Use?</div>
+            <div class="card purple">
+                <h3>🥇 Default choice: Zero-shot CoT</h3>
+                <p>
+                    For 90% of cases, just append <span
+                        style="color:#f472b6;font-weight:700;"
+                        >"Let's think step by step."</span
+                    > to your prompt. Free, zero setup, works instantly. If you need
+                    reasoning — start here.
+                </p>
+            </div>
+            <div class="card green">
+                <h3>🥈 When you need more control: Few-shot CoT</h3>
+                <p>
+                    When you know the reasoning style you want — write 1–2
+                    examples showing exactly how to break down the problem. More
+                    reliable than zero-shot for very specific task formats.
+                </p>
+            </div>
+            <div class="card orange">
+                <h3>🥉 For scale: Auto-CoT</h3>
+                <p>
+                    Only when you're building a pipeline that processes a large,
+                    diverse question dataset. Not needed for building individual
+                    features or prompts.
+                </p>
+            </div>
+
+            <div class="tip-banner">
+                <span style="font-size:1.4rem;flex-shrink:0;">💡</span>
+                <p>
+                    <strong>The progression so far:</strong> Zero-shot (just ask)
+                    → Few-shot (show examples) → CoT (show reasoning) → Zero-shot
+                    CoT (trigger reasoning with 5 words). Each level solves the failure
+                    of the previous one. Zero-shot CoT is your new default whenever
+                    a task involves <em>any</em> multi-step thinking.
+                </p>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #a78bfa;
+        margin: 2rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #2d3348;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 1.75rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.93rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.83rem;
+        transition: background 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Variant tabs */
+    .vtabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+    .vtab {
+        padding: 0.5rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .vtab.active {
+        color: #fff;
+        border-color: transparent;
+    }
+    .vtab.v1.active {
+        background: #6366f1;
+    }
+    .vtab.v2.active {
+        background: #059669;
+    }
+    .vtab.v3.active {
+        background: #d97706;
+    }
+    .vpage {
+        display: none;
+        animation: fadeIn 0.25s ease;
+    }
+    .vpage.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Cards */
+    .card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .card.purple {
+        border-left: 4px solid #6366f1;
+    }
+    .card.green {
+        border-left: 4px solid #059669;
+    }
+    .card.orange {
+        border-left: 4px solid #d97706;
+    }
+    .card.red {
+        border-left: 4px solid #e11d48;
+    }
+    .card h3 {
+        font-size: 1rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
+    .card p {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.68;
+    }
+    .analogy {
+        margin-top: 0.8rem;
+        background: #12151f;
+        border-radius: 8px;
+        padding: 0.65rem 0.9rem;
+        font-size: 0.82rem;
+        font-style: italic;
+        line-height: 1.55;
+    }
+
+    /* Prompt blocks */
+    .prompt-wrap {
+        background: #12151f;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin: 0.7rem 0 0.3rem;
+    }
+    .prompt-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+    .prompt-wrap pre {
+        font-family: monospace;
+        font-size: 0.79rem;
+        white-space: pre-wrap;
+        line-height: 1.85;
+        color: #c7d2fe;
+    }
+    .output-wrap {
+        background: #111a14;
+        border-radius: 10px;
+        padding: 0.75rem 1.2rem;
+        margin-bottom: 0.9rem;
+    }
+    .output-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #4ade8066;
+        margin-bottom: 0.3rem;
+    }
+    .output-wrap pre {
+        font-family: monospace;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        color: #86efac;
+        line-height: 1.75;
+    }
+    .output-wrap.wrong {
+        background: #1e1515;
+    }
+    .output-wrap.wrong .lbl {
+        color: #f8717166;
+    }
+    .output-wrap.wrong pre {
+        color: #fca5a5;
+    }
+
+    /* Highlight classes */
+    .hl-steps {
+        color: #4ade80;
+        font-weight: 600;
+    }
+    .hl-answer {
+        color: #fbbf24;
+        font-weight: 600;
+    }
+    .hl-magic {
+        color: #f472b6;
+        font-weight: 700;
+        background: #2a1020;
+        padding: 0 4px;
+        border-radius: 3px;
+    }
+    .hl-task {
+        color: #94a3b8;
+    }
+
+    /* Before/after toggle */
+    .ba-wrap {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.2rem;
+        margin: 1rem 0;
+    }
+    .ba-wrap h4 {
+        font-size: 0.9rem;
+        color: #fff;
+        margin-bottom: 0.8rem;
+    }
+    .ba-btns {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .ba-btn {
+        padding: 0.38rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #12151f;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .ba-btn.active.before {
+        background: #3a1e1e;
+        color: #f87171;
+        border-color: #5c2626;
+    }
+    .ba-btn.active.after {
+        background: #1a3a2a;
+        color: #4ade80;
+        border-color: #1a5c30;
+    }
+    .ba-content {
+        display: none;
+    }
+    .ba-content.active {
+        display: block;
+        animation: fadeIn 0.2s;
+    }
+
+    /* Two columns */
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    @media (max-width: 620px) {
+        .two-col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Dissect panels */
+    .dissect {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1.2rem 0;
+    }
+    @media (max-width: 620px) {
+        .dissect {
+            grid-template-columns: 1fr;
+        }
+    }
+    .dp {
+        background: #1e2130;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        border-top: 3px solid;
+    }
+    .dp.used {
+        border-color: #6366f1;
+    }
+    .dp.effect {
+        border-color: #059669;
+    }
+    .dp.violate {
+        border-color: #e11d48;
+    }
+    .dp.bonus {
+        border-color: #d97706;
+    }
+    .dp h4 {
+        font-size: 0.82rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .dp.used h4 {
+        color: #a78bfa;
+    }
+    .dp.effect h4 {
+        color: #4ade80;
+    }
+    .dp.violate h4 {
+        color: #fb7185;
+    }
+    .dp.bonus h4 {
+        color: #fbbf24;
+    }
+    .dp p,
+    .dp li {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        line-height: 1.65;
+    }
+    .dp ul {
+        padding-left: 1rem;
+    }
+    .dp li {
+        margin-bottom: 2px;
+    }
+
+    /* Auto-CoT pipeline */
+    .pipeline {
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1.3rem;
+        margin: 1rem 0;
+    }
+    .pipeline h4 {
+        font-size: 0.88rem;
+        color: #fff;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .pipe-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .pipe-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        background: #1e2130;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+    }
+    .ps-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.82rem;
+        flex-shrink: 0;
+    }
+    .ps-num.c1 {
+        background: #6366f122;
+        color: #a78bfa;
+        border: 1px solid #6366f144;
+    }
+    .ps-num.c2 {
+        background: #05966922;
+        color: #4ade80;
+        border: 1px solid #05966944;
+    }
+    .ps-num.c3 {
+        background: #d9780622;
+        color: #fbbf24;
+        border: 1px solid #d9780644;
+    }
+    .ps-num.c4 {
+        background: #e11d4822;
+        color: #fb7185;
+        border: 1px solid #e11d4844;
+    }
+    .ps-body h5 {
+        font-size: 0.82rem;
+        color: #fff;
+        margin-bottom: 0.2rem;
+    }
+    .ps-body p {
+        font-size: 0.78rem;
+        color: #64748b;
+        line-height: 1.55;
+    }
+    .pipe-arrow {
+        text-align: center;
+        color: #3b4268;
+        font-size: 0.9rem;
+        padding: 0.1rem 0;
+    }
+
+    /* Comparison table */
+    .cmp-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.8rem;
+    }
+    .cmp-table th {
+        background: #1e2130;
+        color: #94a3b8;
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+    .cmp-table td {
+        padding: 0.65rem 0.9rem;
+        border-top: 1px solid #1e2130;
+        color: #94a3b8;
+        vertical-align: top;
+        line-height: 1.5;
+    }
+    .cmp-table tr:nth-child(even) td {
+        background: #12151f;
+    }
+    .cmp-table td:first-child {
+        color: #fff;
+        font-weight: 600;
+    }
+    .badge {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 10px;
+        font-size: 0.68rem;
+        font-weight: 700;
+    }
+    .b-easy {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .b-medium {
+        background: #2a2a1a;
+        color: #fbbf24;
+    }
+    .b-hard {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+
+    /* Magic phrase box */
+    .magic-box {
+        background: linear-gradient(135deg, #1a0a2e, #0a1a2e);
+        border: 1px solid #6366f144;
+        border-radius: 14px;
+        padding: 1.4rem 1.6rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+    .magic-box .magic-phrase {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #f472b6;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px #f472b644;
+    }
+    .magic-box p {
+        font-size: 0.84rem;
+        color: #94a3b8;
+        line-height: 1.65;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner p {
+        font-size: 0.87rem;
+        color: #94a3b8;
+        line-height: 1.65;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+</style>
+
+<script is:inline>
+    function showV(idx, el) {
+        document
+            .querySelectorAll(".vpage")
+            .forEach((p) => p.classList.remove("active"));
+        document
+            .querySelectorAll(".vtab")
+            .forEach((t) => t.classList.remove("active"));
+        document.getElementById("vp-" + idx).classList.add("active");
+        el.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function showBA(mode, el) {
+        document
+            .querySelectorAll(".ba-content")
+            .forEach((e) => e.classList.remove("active"));
+        document
+            .querySelectorAll(".ba-btn")
+            .forEach((e) => e.classList.remove("active"));
+        document.getElementById("ba-" + mode).classList.add("active");
+        el.classList.add("active");
+    }
+</script>
