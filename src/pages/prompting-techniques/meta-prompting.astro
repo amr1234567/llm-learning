@@ -1,0 +1,1086 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Meta Prompting">
+    <div class="container">
+        <h1>🧩 Meta Prompting</h1>
+        <p class="subtitle">
+            Teach the AI the shape of a good answer — not the content. Structure
+            over specifics.
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/techniques/meta-prompting"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Core Idea -->
+        <div class="section-title">💡 The Core Idea</div>
+        <div class="concept-card">
+            <h3>Stop giving examples. Start giving structure.</h3>
+            <p>
+                Meta prompting shifts the focus from <strong
+                    >"here are examples of what I want"</strong
+                > (few-shot) to <strong
+                    >"here is the shape the answer should follow"</strong
+                > — without worrying about specific content. You provide an abstract
+                template: the roles, structure, and syntax of the expected solution.
+                The AI fills it with its own knowledge.
+            </p>
+            <p class="hint">
+                🧠 Think of it like giving a chef a blank recipe card with
+                pre-filled sections (Ingredients / Method / Plating) and letting
+                them cook. You define the <em>template</em> — they fill it with expertise.
+            </p>
+        </div>
+
+        <!-- Few-Shot vs Meta -->
+        <div class="section-title">⚡ Few-Shot vs Meta Prompting</div>
+        <p class="section-desc">
+            Both produce the same result. The key difference is <em>how</em> you guide
+            the AI. Click each tab to compare:
+        </p>
+
+        <div class="shot-tabs">
+            <div class="shot-tab active" onclick="showTab(event, 'few')">
+                🟡 Few-Shot Approach
+            </div>
+            <div class="shot-tab" onclick="showTab(event, 'meta')">
+                🟣 Meta Prompt Approach
+            </div>
+            <div class="shot-tab" onclick="showTab(event, 'combined')">
+                ✅ Combined (Best of Both)
+            </div>
+        </div>
+
+        <div class="shot-content active" id="shot-few">
+            <p class="desc">
+                <strong>Few-shot</strong> gives the AI 2–3 fully worked examples,
+                then asks the real question. Token-heavy but very explicit.
+            </p>
+            <div class="code-block">
+                <span class="prompt-label">PROMPT (few-shot for math):</span>
+                <span class="ex-line">Example 1:</span>
+                <span class="ex-line">Problem: Solve x² + 5x + 6 = 0</span>
+                <span class="ex-line"
+                    >Solution: Factor → (x+2)(x+3)=0 → x = -2 or x = -3</span
+                >
+
+                <span class="ex-line">Example 2:</span>
+                <span class="ex-line">Problem: Solve x² - 7x + 12 = 0</span>
+                <span class="ex-line"
+                    >Solution: Factor → (x-3)(x-4)=0 → x = 3 or x = 4</span
+                >
+
+                <span class="task-line">Now solve: x² + 3x - 10 = 0</span>
+
+                <span class="output-label">OUTPUT:</span>
+                Factor → (x+5)(x-2)=0 → x = -5 or x = 2 ✅
+            </div>
+            <div class="verdict bad">
+                ❌ Works, but ~480 tokens just for the examples — and locked to
+                one problem style
+            </div>
+        </div>
+
+        <div class="shot-content" id="shot-meta">
+            <p class="desc">
+                <strong>Meta prompting</strong> gives the AI an abstract structural
+                skeleton instead. No worked examples — just the shape of a good answer.
+            </p>
+            <div class="code-block">
+                <span class="prompt-label">PROMPT (meta prompt for math):</span>
+                <span class="struct-line"
+                    >Problem Type: [Quadratic Equation]</span
+                >
+                <span class="struct-line"
+                    >Given: [equation in ax²+bx+c=0 form]</span
+                >
+
+                <span class="struct-line"
+                    >Step 1: [Identify the factoring approach]</span
+                >
+                <span class="struct-line"
+                    >Step 2: [Find two numbers that multiply to c and add to b]</span
+                >
+                <span class="struct-line"
+                    >Step 3: [Write the factored form]</span
+                >
+                <span class="struct-line">Step 4: [State the solution set]</span
+                >
+
+                <span class="task-line">Now solve: x² + 3x - 10 = 0</span>
+
+                <span class="output-label">OUTPUT:</span>
+                Step 1: Factoring... Step 2: +5 × -2 = -10, +5 + -2 = 3... Step 3:
+                (x+5)(x-2)=0... Step 4: x = -5 or x = 2 ✅
+            </div>
+            <div class="verdict good">
+                ✅ Same result — ~95 tokens. Template reusable for any
+                quadratic.
+            </div>
+        </div>
+
+        <div class="shot-content" id="shot-combined">
+            <p class="desc">
+                Combine a meta structure with <strong>one single example</strong
+                > to anchor the style. Best of both worlds: token-efficient yet grounded.
+            </p>
+            <div class="code-block">
+                <span class="prompt-label">PROMPT (combined approach):</span>
+                <span class="struct-line"
+                    >Problem Type: [Quadratic Equation]</span
+                >
+                <span class="struct-line"
+                    >Step 1: [Identify factoring approach]</span
+                >
+                <span class="struct-line">Step 2: [Find factor pair]</span>
+                <span class="struct-line"
+                    >Step 3: [Factored form → solution set]</span
+                >
+
+                <span class="ex-line"
+                    >Example: x² + 5x + 6 = 0 → (x+2)(x+3)=0 → x=-2, x=-3</span
+                >
+
+                <span class="task-line">Now solve: x² + 3x - 10 = 0</span>
+
+                <span class="output-label">OUTPUT:</span>
+                (x+5)(x-2)=0 → x = -5 or x = 2 ✅
+            </div>
+            <div class="verdict good">
+                ✅ ~160 tokens. Structure from meta + style anchor from 1
+                example.
+            </div>
+        </div>
+
+        <!-- Token Efficiency -->
+        <div class="section-title">💾 Token Efficiency</div>
+        <div class="concept-card green">
+            <h3>Meta prompting can cut prompt length by 50–70%</h3>
+            <p>
+                Every token costs money and consumes context window space.
+                Few-shot examples can easily be 300–500 tokens each. A meta
+                prompt achieving the same result might be 80–120 tokens. For
+                apps processing thousands of requests, this is a significant
+                cost difference.
+            </p>
+        </div>
+        <div class="token-bars">
+            <div class="token-row">
+                <div class="token-label">Few-Shot (3 examples)</div>
+                <div class="bar-bg">
+                    <div class="bar-fill bar-bad" style="width:85%">
+                        ~480 tokens
+                    </div>
+                </div>
+            </div>
+            <div class="token-row">
+                <div class="token-label">Combined (1 example)</div>
+                <div class="bar-bg">
+                    <div class="bar-fill bar-mid" style="width:40%">
+                        ~160 tokens
+                    </div>
+                </div>
+            </div>
+            <div class="token-row">
+                <div class="token-label">Meta Only</div>
+                <div class="bar-bg">
+                    <div class="bar-fill bar-good" style="width:20%">
+                        ~95 tokens
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5 Key Characteristics -->
+        <div class="section-title">🔑 5 Key Characteristics</div>
+        <p class="section-desc">
+            From <em>Zhang et al. (2024)</em> — the research paper that formally defined
+            meta prompting:
+        </p>
+        <div class="char-grid">
+            <div class="char-item">
+                <div class="char-num">1</div>
+                <div>
+                    <div class="char-title">Structure-Oriented</div>
+                    <p>
+                        Prioritizes the format and pattern of problems over
+                        specific content. Defines HOW to answer, not WHAT the
+                        answer is.
+                    </p>
+                </div>
+            </div>
+            <div class="char-item">
+                <div class="char-num">2</div>
+                <div>
+                    <div class="char-title">Syntax-Focused</div>
+                    <p>
+                        Uses syntax as a guiding template. Think: [Step 1:
+                        Identify X], [Step 2: Apply Y] — placeholders, not
+                        filled values.
+                    </p>
+                </div>
+            </div>
+            <div class="char-item">
+                <div class="char-num">3</div>
+                <div>
+                    <div class="char-title">Abstract Examples</div>
+                    <p>
+                        Uses frameworks showing the structure of solutions, not
+                        specific solved examples. The scaffold — not the
+                        building.
+                    </p>
+                </div>
+            </div>
+            <div class="char-item">
+                <div class="char-num">4</div>
+                <div>
+                    <div class="char-title">Versatile</div>
+                    <p>
+                        The same meta prompt template can apply across many
+                        different inputs. One template — many problems solved.
+                    </p>
+                </div>
+            </div>
+            <div class="char-item">
+                <div class="char-num">5</div>
+                <div>
+                    <div class="char-title">Categorical Approach</div>
+                    <p>
+                        Draws from type theory — emphasizes categorization and
+                        logical arrangement of prompt components over raw
+                        content.
+                    </p>
+                </div>
+            </div>
+            <div class="char-item highlight">
+                <div class="char-num warn">!</div>
+                <div>
+                    <div class="char-title warn-title">Key Assumption</div>
+                    <p>
+                        Meta prompting assumes the AI <strong
+                            >already has the knowledge</strong
+                        > for the task. It only works well on familiar domains. Novel/unique
+                        tasks → use few-shot instead.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anatomy of a Meta Prompt -->
+        <div class="section-title">🔬 Anatomy of a Meta Prompt</div>
+        <p class="section-desc">
+            Colour-coded breakdown of each structural element:
+        </p>
+        <div class="anatomy-box">
+            <span class="part role">You are an expert in [DOMAIN].</span>
+            <br /><br />
+            <span class="part struct">Task Type: [PROBLEM_CATEGORY]</span><br />
+            <span class="part struct">Given: [INPUT_DESCRIPTION]</span>
+            <br /><br />
+            <span class="part fmt">Analysis:</span><br />
+            <span class="part fmt"
+                >&nbsp;&nbsp;Step 1: [IDENTIFY the key components]</span
+            ><br />
+            <span class="part fmt"
+                >&nbsp;&nbsp;Step 2: [APPLY the relevant method]</span
+            ><br />
+            <span class="part fmt">&nbsp;&nbsp;Step 3: [VERIFY the result]</span
+            ><br /><br />
+            <span class="part fmt">Output Format:</span><br />
+            <span class="part fmt">&nbsp;&nbsp;- Answer: [FINAL_VALUE]</span><br
+            />
+            <span class="part fmt"
+                >&nbsp;&nbsp;- Explanation: [ONE_SENTENCE]</span
+            ><br /><br />
+            <span class="part task"
+                >Now apply this to: &#123;actual problem&#125;</span
+            >
+        </div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot dot-role"></div>
+                Role definition
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-struct"></div>
+                Structure labels
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-fmt"></div>
+                Format skeleton
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-task"></div>
+                Actual task
+            </div>
+        </div>
+
+        <!-- When to use -->
+        <div class="section-title">🎯 When to Use Which</div>
+        <div class="when-grid">
+            <div class="when-card yes">
+                <h4>✅ Use Meta Prompting when...</h4>
+                <ul>
+                    <li>
+                        The task type is well-known (math, code, classification)
+                    </li>
+                    <li>You'll reuse the same structure for many inputs</li>
+                    <li>Token cost or context window space matters</li>
+                    <li>
+                        You need consistent output format across different
+                        inputs
+                    </li>
+                    <li>The AI clearly knows the domain</li>
+                </ul>
+            </div>
+            <div class="when-card no">
+                <h4>❌ Use Few-Shot instead when...</h4>
+                <ul>
+                    <li>The task is novel or unusual</li>
+                    <li>You need a very specific style/tone</li>
+                    <li>The domain is niche and needs concrete anchoring</li>
+                    <li>
+                        You're unsure if the AI knows how to approach the
+                        problem
+                    </li>
+                    <li>Output quality matters more than token cost</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Interactive Builder -->
+        <div class="section-title">🛠️ Build a Meta Prompt</div>
+        <div class="builder">
+            <p class="builder-intro">
+                Fill in the structural slots below to assemble a ready-to-use
+                meta prompt. Brackets [ ] are replaced with your input.
+            </p>
+
+            <div class="field-group">
+                <div class="field-label">
+                    <span class="badge badge-role">Role</span>
+                    What expert is the AI?
+                </div>
+                <input
+                    type="text"
+                    id="f-role"
+                    placeholder='e.g. "software engineer", "math tutor", "legal analyst"'
+                />
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">
+                    <span class="badge badge-struct">Task Type</span>
+                    What category of problem?
+                </div>
+                <input
+                    type="text"
+                    id="f-type"
+                    placeholder='e.g. "Code Review", "Quadratic Equation", "Sentiment Classification"'
+                />
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">
+                    <span class="badge badge-fmt">Steps</span>
+                    What steps should the AI follow? (one per line)
+                </div>
+                <textarea
+                    id="f-steps"
+                    rows="4"
+                    placeholder={"Step 1: Identify the issue\nStep 2: Explain why it's a problem\nStep 3: Suggest a fix"}
+                ></textarea>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">
+                    <span class="badge badge-fmt">Output Format</span>
+                    <span class="badge badge-opt">Optional</span>
+                    What shape should the answer be in?
+                </div>
+                <input
+                    type="text"
+                    id="f-output"
+                    placeholder='e.g. "Answer + one-line explanation", "JSON object", "bullet list"'
+                />
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">
+                    <span class="badge badge-task">Task</span>
+                    The actual problem to solve
+                </div>
+                <input
+                    type="text"
+                    id="f-task"
+                    placeholder='e.g. "Review this function: function add(a,b) { return a - b; }"'
+                />
+            </div>
+
+            <button class="build-btn" onclick="buildMetaPrompt()"
+                >⚡ Build Meta Prompt</button
+            >
+
+            <div class="result-box" id="result-box">
+                <div class="result-label">YOUR META PROMPT</div>
+                <pre id="result-text"></pre>
+                <button class="copy-btn" onclick="copyPrompt()"
+                    >📋 Copy to clipboard</button
+                >
+            </div>
+        </div>
+
+        <div class="tip-banner">
+            <span style="font-size:1.4rem; flex-shrink:0;">💡</span>
+            <p>
+                <strong>Key Takeaway:</strong> Meta prompting is few-shot prompting
+                where the examples are replaced by an abstract structure template.
+                You're teaching the AI the <strong>shape</strong> of a good answer,
+                not giving it content to copy. It's more token-efficient and more
+                consistent — but only works when the AI already has the domain knowledge
+                to fill the template. Think of it as building a
+                <strong>reusable answer mold</strong> — pour any problem in, get a
+                consistently shaped answer out.
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        transition:
+            background 0.2s,
+            border-color 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Section headers */
+    .section-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #a78bfa;
+        margin: 2rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #2d3348;
+    }
+    .section-desc {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Concept cards */
+    .concept-card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #6366f1;
+    }
+    .concept-card.green {
+        border-left-color: #059669;
+    }
+    .concept-card h3 {
+        font-size: 0.95rem;
+        color: #fff;
+        margin-bottom: 0.4rem;
+    }
+    .concept-card p {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 0.4rem;
+    }
+    .concept-card .hint {
+        font-size: 0.8rem;
+        color: #818cf8;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    /* Tabs */
+    .shot-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .shot-tab {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .shot-tab.active {
+        background: #6366f1;
+        color: #fff;
+        border-color: #6366f1;
+    }
+    .shot-content {
+        display: none;
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+    .shot-content.active {
+        display: block;
+    }
+    .shot-content .desc {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        line-height: 1.6;
+    }
+
+    /* Code blocks */
+    .code-block {
+        font-family: monospace;
+        font-size: 0.8rem;
+        background: #0f1117;
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+        color: #c7d2fe;
+        line-height: 1.9;
+        white-space: pre-wrap;
+        margin-bottom: 0.8rem;
+    }
+    .code-block .prompt-label {
+        color: #64748b;
+        font-size: 0.72rem;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+    .code-block .output-label {
+        color: #4ade80;
+        display: block;
+        margin-top: 0.4rem;
+    }
+    .code-block .ex-line {
+        color: #fbbf24;
+        display: block;
+    }
+    .code-block .struct-line {
+        color: #a78bfa;
+        display: block;
+    }
+    .code-block .task-line {
+        color: #818cf8;
+        display: block;
+        margin-top: 0.3rem;
+    }
+
+    .verdict {
+        font-size: 0.78rem;
+        padding: 5px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    .verdict.bad {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+    .verdict.good {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+
+    /* Token bars */
+    .token-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        margin: 1rem 0 1.5rem;
+    }
+    .token-row {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    .token-label {
+        font-size: 0.78rem;
+        color: #94a3b8;
+        width: 160px;
+        flex-shrink: 0;
+    }
+    .bar-bg {
+        flex: 1;
+        background: #12151f;
+        border-radius: 999px;
+        height: 24px;
+        overflow: hidden;
+    }
+    .bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        padding-left: 0.7rem;
+        font-size: 0.68rem;
+        font-weight: 700;
+        font-family: monospace;
+        color: #000;
+        transition: width 0.6s ease;
+    }
+    .bar-bad {
+        background: #f87171;
+    }
+    .bar-mid {
+        background: #fbbf24;
+    }
+    .bar-good {
+        background: #4ade80;
+    }
+
+    /* Char grid */
+    .char-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+        .char-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .char-item {
+        background: #12151f;
+        border: 1px solid #2d3348;
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        display: flex;
+        gap: 0.8rem;
+        align-items: flex-start;
+    }
+    .char-item.highlight {
+        background: #1a1030;
+        border-color: #4a2a80;
+    }
+    .char-num {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #2d1e4a;
+        border: 1px solid #4a2a80;
+        color: #a78bfa;
+        font-weight: 800;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .char-num.warn {
+        background: #2a1a08;
+        border-color: #6b3a08;
+        color: #fbbf24;
+    }
+    .char-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        margin-bottom: 0.25rem;
+    }
+    .char-title.warn-title {
+        color: #fbbf24;
+    }
+    .char-item p {
+        font-size: 0.79rem;
+        color: #64748b;
+        line-height: 1.55;
+        margin: 0;
+    }
+    .char-item p strong {
+        color: #e2e8f0;
+    }
+
+    /* Anatomy */
+    .anatomy-box {
+        background: #12151f;
+        border: 1px solid #2d3348;
+        border-radius: 12px;
+        padding: 1.2rem 1.4rem;
+        font-family: monospace;
+        font-size: 0.82rem;
+        line-height: 1.9;
+        margin-bottom: 0.8rem;
+    }
+    .part.role {
+        color: #a78bfa;
+        background: #1a0f2e;
+        padding: 1px 5px;
+        border-radius: 3px;
+    }
+    .part.struct {
+        color: #818cf8;
+        background: #0d1328;
+        padding: 1px 5px;
+        border-radius: 3px;
+    }
+    .part.fmt {
+        color: #4ade80;
+        background: #0d1f10;
+        padding: 1px 5px;
+        border-radius: 3px;
+    }
+    .part.task {
+        color: #fbbf24;
+        background: #1a1508;
+        padding: 1px 5px;
+        border-radius: 3px;
+    }
+
+    .legend {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        color: #94a3b8;
+    }
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+    .dot-role {
+        background: #a78bfa;
+    }
+    .dot-struct {
+        background: #818cf8;
+    }
+    .dot-fmt {
+        background: #4ade80;
+    }
+    .dot-task {
+        background: #fbbf24;
+    }
+
+    /* When grid */
+    .when-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+        .when-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .when-card {
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        border-top: 3px solid;
+    }
+    .when-card.yes {
+        border-top-color: #4ade80;
+    }
+    .when-card.no {
+        border-top-color: #f87171;
+    }
+    .when-card h4 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+    }
+    .when-card.yes h4 {
+        color: #4ade80;
+    }
+    .when-card.no h4 {
+        color: #f87171;
+    }
+    .when-card ul {
+        padding-left: 1.1rem;
+        list-style: disc;
+    }
+    .when-card li {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        line-height: 1.65;
+        margin-bottom: 2px;
+    }
+
+    /* Builder */
+    .builder {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 14px;
+        padding: 1.4rem;
+        margin-bottom: 1.5rem;
+    }
+    .builder-intro {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        margin-bottom: 1.2rem;
+        line-height: 1.6;
+    }
+    .field-group {
+        margin-bottom: 1rem;
+    }
+    .field-label {
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+    .badge {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        padding: 2px 8px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+    .badge-role {
+        background: #2d1e4a;
+        color: #a78bfa;
+    }
+    .badge-struct {
+        background: #0d1328;
+        color: #818cf8;
+    }
+    .badge-fmt {
+        background: #0d1f10;
+        color: #4ade80;
+    }
+    .badge-task {
+        background: #1a1508;
+        color: #fbbf24;
+    }
+    .badge-opt {
+        background: #1e2130;
+        color: #64748b;
+        border: 1px solid #2d3348;
+    }
+    .builder input,
+    .builder textarea {
+        width: 100%;
+        background: #0f1117;
+        border: 1px solid #2d3348;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 0.7rem 0.9rem;
+        font-size: 0.84rem;
+        font-family: monospace;
+        outline: none;
+        resize: vertical;
+        transition: border-color 0.2s;
+    }
+    .builder input:focus,
+    .builder textarea:focus {
+        border-color: #6366f1;
+    }
+    .build-btn {
+        background: #6366f1;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 0.3rem;
+        transition: background 0.2s;
+    }
+    .build-btn:hover {
+        background: #4f46e5;
+    }
+
+    .result-box {
+        display: none;
+        margin-top: 1rem;
+        background: #0f1117;
+        border: 1px solid #2d3348;
+        border-radius: 10px;
+        padding: 1rem;
+    }
+    .result-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .result-box pre {
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: #c7d2fe;
+        white-space: pre-wrap;
+        line-height: 1.85;
+        margin-bottom: 0.8rem;
+    }
+    .copy-btn {
+        background: #1e2130;
+        color: #94a3b8;
+        border: 1px solid #2d3348;
+        border-radius: 6px;
+        padding: 0.4rem 0.9rem;
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .copy-btn:hover {
+        background: #2d3348;
+        color: #e2e8f0;
+    }
+
+    /* Tip banner */
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner p {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+</style>
+
+<script>
+    function showTab(event: Event, type: string) {
+        document
+            .querySelectorAll(".shot-content")
+            .forEach((el) => el.classList.remove("active"));
+        document
+            .querySelectorAll(".shot-tab")
+            .forEach((el) => el.classList.remove("active"));
+        document.getElementById("shot-" + type)?.classList.add("active");
+        (event?.target as HTMLElement)?.classList.add("active");
+    }
+
+    function buildMetaPrompt() {
+        const role = (
+            document.getElementById("f-role") as HTMLInputElement
+        )?.value.trim();
+        const type = (
+            document.getElementById("f-type") as HTMLInputElement
+        )?.value.trim();
+        const steps = (
+            document.getElementById("f-steps") as HTMLTextAreaElement
+        )?.value.trim();
+        const output = (
+            document.getElementById("f-output") as HTMLInputElement
+        )?.value.trim();
+        const task = (
+            document.getElementById("f-task") as HTMLInputElement
+        )?.value.trim();
+
+        if (!type && !steps && !task) return;
+
+        let prompt = "";
+
+        if (role) {
+            prompt += `You are an expert ${role}.\n\n`;
+        }
+        if (type) {
+            prompt += `Task Type: [${type}]\n`;
+        }
+        prompt += `Given: [see task below]\n\n`;
+
+        if (steps) {
+            prompt += `Process:\n`;
+            steps.split("\n").forEach((step: string, i: number) => {
+                const s = step.trim();
+                if (s)
+                    prompt += `  ${s.startsWith("Step") ? s : "Step " + (i + 1) + ": " + s}\n`;
+            });
+            prompt += "\n";
+        }
+
+        if (output) {
+            prompt += `Output Format: ${output}\n\n`;
+        }
+
+        if (task) {
+            prompt += `Now apply this to: ${task}`;
+        }
+
+        const box = document.getElementById("result-box");
+        const pre = document.getElementById("result-text");
+        if (box) box.style.display = "block";
+        if (pre) pre.textContent = prompt;
+    }
+
+    function copyPrompt() {
+        const text = document.getElementById("result-text")?.textContent || "";
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector(
+                ".copy-btn",
+            ) as HTMLButtonElement;
+            if (btn) {
+                btn.textContent = "✅ Copied!";
+                setTimeout(() => {
+                    btn.textContent = "📋 Copy to clipboard";
+                }, 2000);
+            }
+        });
+    }
+</script>
