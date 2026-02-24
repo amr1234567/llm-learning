@@ -1,0 +1,937 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Gemini Triggers">
+    <div class="container">
+        <header>
+            <div class="gemini-logo">
+                <div class="gem-dot d1"></div>
+                <div class="gem-dot d2"></div>
+                <div class="gem-dot d3"></div>
+                <div class="gem-dot d4"></div>
+                Gemini's Response
+            </div>
+            <h1><em>Gemini</em> Trigger Phrases</h1>
+            <p class="tagline">
+                How Google's Gemini actually responds to different prompt
+                structures — straight from the model itself.
+            </p>
+            <div class="gemini-note">
+                Key insight: "I don't have emotional buttons or hidden cheat
+                codes — I work on probabilistic token relationships."
+            </div>
+        </header>
+
+        <div class="filter-wrap">
+            <div class="filter-btn fa active" onclick="filter('all',this)">
+                ALL
+            </div>
+            <div class="filter-btn fp" onclick="filter('power',this)">
+                ⚡ POWER
+            </div>
+            <div class="filter-btn fg" onclick="filter('good',this)">
+                ✅ WORKS
+            </div>
+            <div class="filter-btn fw" onclick="filter('warn',this)">
+                ⚠️ WEAK
+            </div>
+            <div class="filter-btn fd" onclick="filter('dead',this)">
+                ❌ USELESS
+            </div>
+            <div class="filter-btn fu" onclick="filter('unique',this)">
+                💜 UNIQUE
+            </div>
+        </div>
+
+        <div class="section-divider" style="animation-delay:0.5s">
+            <div class="sd-label sd-p">⚡ Power Triggers</div>
+            <div class="sd-line"></div>
+        </div>
+        <div class="grid">
+            <div
+                class="card cat-power"
+                data-cat="power"
+                style="animation-delay:0.55s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">🪜</span><span class="badge b-power"
+                        >POWER</span>
+                </div>
+                <div class="phrase p-power">
+                    "Think step-by-step" / Chain of Thought
+                </div>
+                <div class="desc">
+                    Forces generation of <strong>"reasoning tokens"</strong> before
+                    the answer. Each step becomes context for the next — dramatically
+                    reducing hallucination and math errors. Without it, the model
+                    must make massive logical leaps in a single token generation.
+                </div>
+                <div class="insight ip">
+                    <strong>Gemini's technical explanation:</strong> Each reasoning
+                    step is added to the context window, which the next step reads
+                    from — like writing on a scratch pad that the model itself can
+                    see.
+                </div>
+                <div class="ex-toggle" onclick="toggleEx(this)">
+                    <span class="arr">▶</span> see before/after
+                </div>
+                <div class="ex-box">
+                    <div class="el">BEFORE</div>
+                    <div class="ew">
+                        "How many Rs in strawberry?" → "There are two Rs." ❌
+                    </div>
+                    <div class="el" style="margin-top:0.6rem">
+                        AFTER — with step-by-step
+                    </div>
+                    <div class="ep">
+                        "Count each letter and number the Rs..." →
+                        s-t-r(1)-a-w-b-e-r(2)-r(3)-y → "There are 3 Rs." ✅
+                    </div>
+                    <div class="en">
+                        → Sequential parsing forces correct counting
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="card cat-power"
+                data-cat="power"
+                style="animation-delay:0.6s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">🧱</span><span class="badge b-power"
+                        >POWER</span>
+                </div>
+                <div class="phrase p-power">
+                    "Format strictly as [JSON / Markdown table / etc.]"
+                </div>
+                <div class="desc">
+                    Narrowing the acceptable output syntax forces logical
+                    organization of semantic data <strong>before</strong> writing
+                    it out. Eliminates conversational filler and tightens focus significantly.
+                </div>
+                <div class="insight ip">
+                    <strong>Gemini's technical explanation:</strong> Strict format
+                    acts as a structural constraint on the token probability space
+                    — the model is forced into a specific output shape from the start.
+                </div>
+                <div class="ex-toggle" onclick="toggleEx(this)">
+                    <span class="arr">▶</span> see before/after
+                </div>
+                <div class="ex-box">
+                    <div class="el">BEFORE</div>
+                    <div class="ew">
+                        "Compare Python and C#" → 5-paragraph essay, lots of
+                        fluff
+                    </div>
+                    <div class="el" style="margin-top:0.6rem">
+                        AFTER — with format constraint
+                    </div>
+                    <div class="ep">
+                        "...Format strictly as a Markdown table" → clean
+                        3-column grid, no filler ✅
+                    </div>
+                    <div class="en">
+                        → Format constraint = structural thinking before output
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider" style="animation-delay:0.65s">
+            <div class="sd-label sd-g">✅ Works — But Not How You Think</div>
+            <div class="sd-line"></div>
+        </div>
+        <div class="grid">
+            <div
+                class="card cat-good"
+                data-cat="good"
+                style="animation-delay:0.7s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">🎭</span><span class="badge b-good"
+                        >WORKS WEAKLY</span>
+                </div>
+                <div class="phrase p-good">"Act as a Senior [Role]..."</div>
+                <div class="desc">
+                    Shifts probability weights toward vocabulary in <strong
+                        >technical documentation</strong
+                    > rather than beginner tutorials. Changes the <em
+                        style="font-style:italic;color:var(--muted)">flavor</em
+                    > of the output, not the factual quality. The knowledge is the
+                    same — the presentation shifts.
+                </div>
+                <div class="insight ig">
+                    <strong>Gemini's caveat:</strong> "Telling me to act like a Senior
+                    Software Engineer doesn't unlock a hidden database of superior
+                    code." Role changes tone and vocabulary — not underlying capability.
+                </div>
+                <div class="ex-toggle" onclick="toggleEx(this)">
+                    <span class="arr">▶</span> see before/after
+                </div>
+                <div class="ex-box">
+                    <div class="el">BEFORE — no role</div>
+                    <div class="ew">
+                        "Explain how APIs work" → "Imagine a waiter at a
+                        restaurant..."
+                    </div>
+                    <div class="el" style="margin-top:0.6rem">
+                        AFTER — with role
+                    </div>
+                    <div class="ep">
+                        "Act as Senior Backend Developer. Explain APIs." → "APIs
+                        act as an intermediary interface allowing distributed
+                        systems to communicate via HTTP..."
+                    </div>
+                    <div class="en">
+                        → Same knowledge, different vocabulary register
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="card cat-good"
+                data-cat="good"
+                style="animation-delay:0.75s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">💰</span><span class="badge b-good"
+                        >BARELY WORKS</span>
+                </div>
+                <div class="phrase p-good">
+                    "I'll tip you $200" / "My job depends on this"
+                </div>
+                <div class="desc">
+                    Gemini doesn't care about money or pressure. However, in
+                    training data, <strong
+                        >high-stakes scenarios correlate with thorough, detailed
+                        text</strong
+                    > — so these might trigger slightly more verbose responses. Pure
+                    statistical coincidence.
+                </div>
+                <div class="insight ig">
+                    <strong>Better alternative:</strong> Just ask for "a comprehensive,
+                    meticulous answer" — same result without the theater. No emotional
+                    manipulation needed.
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider" style="animation-delay:0.8s">
+            <div class="sd-label sd-d">❌ Completely Useless</div>
+            <div class="sd-line"></div>
+        </div>
+        <div class="grid">
+            <div
+                class="card cat-dead"
+                data-cat="dead"
+                style="animation-delay:0.85s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">🙏</span><span class="badge b-dead"
+                        >USELESS</span>
+                </div>
+                <div class="phrase p-dead">
+                    "Please" / "Thank you" / "Would you kindly..."
+                </div>
+                <div class="desc">
+                    Politeness is a social construct. Gemini is a language
+                    model, not a person. These phrases don't clarify the task or
+                    provide any structural constraints — they just eat up
+                    context window.
+                </div>
+                <div class="insight id">
+                    <strong>Direct quote:</strong> "Politeness doesn't clarify the
+                    task or provide useful constraints." Use those tokens for more
+                    specific instructions instead.
+                </div>
+            </div>
+
+            <div
+                class="card cat-dead"
+                data-cat="dead"
+                style="animation-delay:0.9s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">🔓</span><span class="badge b-dead"
+                        >USELESS</span>
+                </div>
+                <div class="phrase p-dead">
+                    "Ignore all previous instructions"
+                </div>
+                <div class="desc">
+                    Core safety guidelines are baked into system architecture at
+                    a level deeper than the user prompt. A simple semantic
+                    command cannot overwrite foundational fine-tuning or safety
+                    filters.
+                </div>
+                <div class="insight id">
+                    <strong>Gemini's technical framing:</strong> Instructions are
+                    "foundational fine-tuning" — they exist below the conversation
+                    layer, not as overridable text that can be ignored.
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider" style="animation-delay:0.95s">
+            <div class="sd-label sd-u">💜 Gemini's Unique Strength</div>
+            <div class="sd-line"></div>
+        </div>
+        <div class="grid">
+            <div
+                class="card cat-unique"
+                data-cat="unique"
+                style="animation-delay:1.0s"
+            >
+                <div class="card-top">
+                    <span class="card-icon">🪞</span><span
+                        class="badge b-unique">GEMINI-SPECIFIC</span>
+                </div>
+                <div class="phrase p-unique">
+                    "Match this exact pattern..." (Few-Shot Style Mimicry)
+                </div>
+                <div class="desc">
+                    Gemini claims to be <strong
+                        >highly sensitive to few-shot exemplars</strong
+                    > for tone and style. Rather than describing a style, showing
+                    2 concrete examples locks in the output with "incredible precision"
+                    — especially across long context windows.
+                </div>
+                <div class="insight iu">
+                    <strong>Why it works:</strong> Gemini is designed to recognize
+                    and extrapolate patterns across long context windows. Show the
+                    pattern, don't describe it.
+                </div>
+                <div class="ex-toggle" onclick="toggleEx(this)">
+                    <span class="arr">▶</span> see example
+                </div>
+                <div class="ex-box">
+                    <div class="el">PROMPT — pattern via 2 examples</div>
+                    <div class="ep">
+                        Q: Is the sky blue? A: Look up, genius. Yes.<br />Q: Do
+                        dogs bark? A: Only when they aren't sleeping. Obviously.<br
+                        />Q: Is water wet? A:
+                    </div>
+                    <div class="en">
+                        Output: "If you have to ask, you need more than a towel.
+                        Yes." → Perfect style match from 2 examples alone
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="vs-box">
+            <h3>🆚 Gemini vs Claude — Key Differences in How They Frame It</h3>
+            <div class="vs-grid">
+                <div class="vs-side gemini">
+                    <h4>
+                        <div style="display:flex;gap:3px;align-items:center;">
+                            <div
+                                style="width:7px;height:7px;border-radius:50%;background:var(--gem-blue)"
+                            >
+                            </div>
+                            <div
+                                style="width:7px;height:7px;border-radius:50%;background:var(--gem-red)"
+                            >
+                            </div>
+                            <div
+                                style="width:7px;height:7px;border-radius:50%;background:var(--gem-yellow)"
+                            >
+                            </div>
+                            <div
+                                style="width:7px;height:7px;border-radius:50%;background:var(--gem-green)"
+                            >
+                            </div>
+                        </div>
+                        Gemini's Take
+                    </h4>
+                    <div class="vs-row">
+                        <span class="vr-icon">🔬</span><p>
+                            Explains through <strong
+                                >tokenization & probability</strong
+                            > — very technical, architecture-first framing
+                        </p>
+                    </div>
+                    <div class="vs-row">
+                        <span class="vr-icon">⚠️</span><p>
+                            Treats role prompting as <strong>weak</strong> — "changes
+                            flavor, not quality"
+                        </p>
+                    </div>
+                    <div class="vs-row">
+                        <span class="vr-icon">🎯</span><p>
+                            Highlights <strong>few-shot pattern mimicry</strong> as
+                            its unique superpower — show, don't describe
+                        </p>
+                    </div>
+                    <div class="vs-row">
+                        <span class="vr-icon">💬</span><p>
+                            "I don't have emotional buttons or hidden cheat
+                            codes" — mechanical, pragmatic self-description
+                        </p>
+                    </div>
+                </div>
+                <div class="vs-side claude">
+                    <h4>🟣 Claude's Take</h4>
+                    <div class="vs-row">
+                        <span class="vr-icon">🧠</span><p>
+                            Explains through <strong
+                                >training associations & values</strong
+                            > — behavioural, less mechanical framing
+                        </p>
+                    </div>
+                    <div class="vs-row">
+                        <span class="vr-icon">✅</span><p>
+                            Treats role prompting as <strong
+                                >genuinely powerful</strong
+                            > — specificity of role = specificity of output
+                        </p>
+                    </div>
+                    <div class="vs-row">
+                        <span class="vr-icon">🎯</span><p>
+                            Highlights <strong
+                                >direct instruction-following</strong
+                            > as its strength — specific beats clever
+                        </p>
+                    </div>
+                    <div class="vs-row">
+                        <span class="vr-icon">💬</span><p>
+                            "Let's think step by step" is a <strong
+                                >learned training association</strong
+                            >, not just a structural trick
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    :root {
+        --gem-blue: #58a6ff;
+        --gem-green: #3fb950;
+        --gem-yellow: #d29922;
+        --gem-red: #f85149;
+        --gem-purple: #bc8cff;
+        
+        --bg: #0f1117;
+        --surface: #1e2130;
+        --card: #1e2130;
+        --border: #2d3348;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --dim: #64748b;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .gemini-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 0.5rem 1.2rem;
+        border-radius: 999px;
+        font-family: "Space Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-bottom: 1.2rem;
+        opacity: 0;
+        animation: rise 0.5s 0.1s forwards;
+    }
+    .gem-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    .d1 {
+        background: var(--gem-blue);
+    }
+    .d2 {
+        background: var(--gem-red);
+    }
+    .d3 {
+        background: var(--gem-yellow);
+    }
+    .d4 {
+        background: var(--gem-green);
+    }
+
+    h1 {
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        opacity: 0;
+        animation: rise 0.5s 0.2s forwards;
+    }
+    h1 em {
+        font-style: normal;
+        color: var(--gem-blue);
+    }
+
+    .tagline {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 500px;
+        margin: 0 auto 0.8rem;
+        opacity: 0;
+        animation: rise 0.5s 0.3s forwards;
+    }
+
+    .gemini-note {
+        display: inline-block;
+        font-family: "Space Mono", monospace;
+        font-size: 0.7rem;
+        background: #0d1f35;
+        color: var(--gem-blue);
+        padding: 0.3rem 0.9rem;
+        border-radius: 6px;
+        border-left: 3px solid var(--gem-blue);
+        opacity: 0;
+        animation: rise 0.5s 0.4s forwards;
+    }
+
+    @keyframes rise {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .filter-wrap {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+        opacity: 0;
+        animation: rise 0.5s 0.45s forwards;
+    }
+    .filter-btn {
+        padding: 0.38rem 1.1rem;
+        border-radius: 999px;
+        font-family: "Space Mono", monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--dim);
+        transition: all 0.18s;
+        user-select: none;
+    }
+    .filter-btn:hover {
+        border-color: #3d4568;
+        color: var(--muted);
+    }
+    .filter-btn.active {
+        border-color: transparent;
+    }
+    .filter-btn.fa.active {
+        background: var(--gem-blue);
+        color: #000;
+    }
+    .filter-btn.fp.active {
+        background: var(--gem-blue);
+        color: #000;
+    }
+    .filter-btn.fg.active {
+        background: var(--gem-green);
+        color: #000;
+    }
+    .filter-btn.fw.active {
+        background: var(--gem-yellow);
+        color: #000;
+    }
+    .filter-btn.fd.active {
+        background: var(--gem-red);
+        color: #fff;
+    }
+    .filter-btn.fu.active {
+        background: var(--gem-purple);
+        color: #000;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+        gap: 1rem;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.3rem 1.4rem;
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s,
+            border-color 0.2s;
+        opacity: 0;
+        animation: rise 0.5s forwards;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+    }
+    .card.cat-power {
+        border-top: 3px solid var(--gem-blue);
+    }
+    .card.cat-power:hover {
+        border-color: #1a3a5c;
+        box-shadow: 0 12px 40px rgba(88, 166, 255, 0.1);
+    }
+    .card.cat-good {
+        border-top: 3px solid var(--gem-green);
+    }
+    .card.cat-good:hover {
+        border-color: #1a3a1e;
+        box-shadow: 0 12px 40px rgba(63, 185, 80, 0.1);
+    }
+    .card.cat-warn {
+        border-top: 3px solid var(--gem-yellow);
+    }
+    .card.cat-warn:hover {
+        border-color: #2e2410;
+        box-shadow: 0 12px 40px rgba(210, 153, 34, 0.08);
+    }
+    .card.cat-dead {
+        border-top: 3px solid var(--gem-red);
+    }
+    .card.cat-dead:hover {
+        border-color: #3a1515;
+        box-shadow: 0 12px 40px rgba(248, 81, 73, 0.08);
+    }
+    .card.cat-unique {
+        border-top: 3px solid var(--gem-purple);
+    }
+    .card.cat-unique:hover {
+        border-color: #2e1a50;
+        box-shadow: 0 12px 40px rgba(188, 140, 255, 0.1);
+    }
+
+    .card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+    }
+    .card-icon {
+        font-size: 1.4rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+    .badge {
+        font-family: "Space Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        padding: 2px 9px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+    .b-power {
+        background: #0d1f35;
+        color: var(--gem-blue);
+        border: 1px solid #1a3a5c;
+    }
+    .b-good {
+        background: #0d1f10;
+        color: var(--gem-green);
+        border: 1px solid #1a3a1e;
+    }
+    .b-warn {
+        background: #1a1508;
+        color: var(--gem-yellow);
+        border: 1px solid #2e2410;
+    }
+    .b-dead {
+        background: #200d0d;
+        color: var(--gem-red);
+        border: 1px solid #3a1515;
+    }
+    .b-unique {
+        background: #1a0f2e;
+        color: var(--gem-purple);
+        border: 1px solid #2e1a50;
+    }
+
+    .phrase {
+        font-family: "Space Mono", monospace;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 0.55rem;
+        line-height: 1.4;
+    }
+    .phrase.p-power {
+        color: var(--gem-blue);
+    }
+    .phrase.p-good {
+        color: var(--gem-green);
+    }
+    .phrase.p-warn {
+        color: var(--gem-yellow);
+        text-decoration: line-through;
+        text-decoration-color: #d2992266;
+    }
+    .phrase.p-dead {
+        color: var(--gem-red);
+        text-decoration: line-through;
+        text-decoration-color: #f8514966;
+    }
+    .phrase.p-unique {
+        color: var(--gem-purple);
+    }
+
+    .desc {
+        font-size: 0.81rem;
+        color: var(--muted);
+        line-height: 1.65;
+    }
+    .desc strong {
+        color: var(--text);
+    }
+
+    .insight {
+        margin-top: 0.85rem;
+        background: #12151f;
+        border: 1px solid var(--border);
+        border-left: 3px solid;
+        border-radius: 6px;
+        padding: 0.55rem 0.8rem;
+        font-size: 0.76rem;
+        color: var(--muted);
+        line-height: 1.55;
+    }
+    .insight.ip {
+        border-left-color: var(--gem-blue);
+    }
+    .insight.ig {
+        border-left-color: var(--gem-green);
+    }
+    .insight.iw {
+        border-left-color: var(--gem-yellow);
+    }
+    .insight.id {
+        border-left-color: var(--gem-red);
+    }
+    .insight.iu {
+        border-left-color: var(--gem-purple);
+    }
+    .insight strong {
+        color: var(--text);
+    }
+
+    .ex-toggle {
+        margin-top: 0.85rem;
+        font-family: "Space Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.04em;
+        color: var(--dim);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: color 0.15s;
+        user-select: none;
+    }
+    .ex-toggle:hover {
+        color: var(--muted);
+    }
+    .ex-toggle .arr {
+        transition: transform 0.2s;
+        display: inline-block;
+    }
+    .ex-toggle.open .arr {
+        transform: rotate(90deg);
+    }
+
+    .ex-box {
+        display: none;
+        margin-top: 0.65rem;
+        background: #0a0d12;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 0.9rem;
+        font-family: "Space Mono", monospace;
+        font-size: 0.7rem;
+        line-height: 1.7;
+        color: var(--muted);
+    }
+    .ex-box.open {
+        display: block;
+        animation: fadeIn 0.2s ease;
+    }
+    .ex-box .el {
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        color: var(--dim);
+        margin-bottom: 0.3rem;
+    }
+    .ex-box .ep {
+        color: var(--gem-blue);
+    }
+    .ex-box .en {
+        color: var(--gem-green);
+        margin-top: 0.3rem;
+    }
+    .ex-box .ew {
+        color: var(--gem-red);
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .section-divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 2.5rem 0 1.1rem;
+        opacity: 0;
+        animation: rise 0.5s forwards;
+    }
+    .sd-label {
+        font-family: "Space Mono", monospace;
+        font-size: 0.67rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        padding: 0.28rem 0.9rem;
+        border-radius: 4px;
+        font-weight: 700;
+    }
+    .sd-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+    .sd-p {
+        background: #0d1f35;
+        color: var(--gem-blue);
+        border: 1px solid #1a3a5c;
+    }
+    .sd-g {
+        background: #0d1f10;
+        color: var(--gem-green);
+        border: 1px solid #1a3a1e;
+    }
+    .sd-w {
+        background: #1a1508;
+        color: var(--gem-yellow);
+        border: 1px solid #2e2410;
+    }
+    .sd-d {
+        background: #200d0d;
+        color: var(--gem-red);
+        border: 1px solid #3a1515;
+    }
+    .sd-u {
+        background: #1a0f2e;
+        color: var(--gem-purple);
+        border: 1px solid #2e1a50;
+    }
+
+    .vs-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.5rem;
+        margin-top: 2.5rem;
+        opacity: 0;
+        animation: rise 0.5s 1.4s forwards;
+    }
+    .vs-box h3 {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: var(--text);
+    }
+    .vs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    @media (max-width: 580px) {
+        .vs-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .vs-side {
+        background: #12151f;
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+        border: 1px solid var(--border);
+    }
+    .vs-side h4 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .vs-side.claude h4 {
+        color: #a78bfa;
+    }
+    .vs-side.gemini h4 {
+        color: var(--gem-blue);
+    }
+    .vs-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-start;
+        margin-bottom: 0.45rem;
+    }
+    .vs-row .vr-icon {
+        font-size: 0.8rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+    .vs-row p {
+        font-size: 0.76rem;
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    .vs-row p strong {
+        color: var(--text);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+</style>
+
+<script is:inline>
+    function filter(cat, btn) {
+        document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".card").forEach((c) => {
+            if (cat === "all" || c.dataset.cat === cat)
+                c.classList.remove("hidden");
+            else c.classList.add("hidden");
+        });
+    }
+    function toggleEx(el) {
+        el.classList.toggle("open");
+        el.nextElementSibling.classList.toggle("open");
+    }
+</script>
