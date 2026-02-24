@@ -31,12 +31,14 @@ const { title } = Astro.props;
                 background: #0f1117;
                 color: #e2e8f0;
                 min-height: 100vh;
-                display: flex;
+                /* Removed display: flex; */
             }
             .main-content {
-                flex: 1;
                 padding: 2rem;
-                margin-left: 250px; /* Same as sidebar width */
+                margin-left: 250px; /* Space for sidebar */
+                width: calc(100% - 250px); /* Fill remaining width */
+                box-sizing: border-box; /* Ensure padding/border is included in width */
+                /* Removed flex: 1; */
             }
             
             .container {
