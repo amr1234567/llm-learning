@@ -1,0 +1,935 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Few-Shot Prompting">
+    <div class="container">
+        <h1>📎 Few-Shot Prompting</h1>
+        <p class="subtitle">
+            Teach the AI with examples instead of just instructions — and unlock
+            tasks zero-shot can't handle
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/techniques/fewshot"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Core concept -->
+        <div class="section-title">💡 What Is Few-Shot Prompting?</div>
+        <div class="card purple">
+            <h3>Show. Don't just tell.</h3>
+            <p>
+                Few-shot prompting means giving the AI <strong
+                    style="color:#e2e8f0;"
+                    >a few examples (demonstrations)</strong
+                > of the task before asking it to do the real thing. Instead of just
+                writing an instruction, you show input→output pairs so the AI learns
+                the pattern, format, and logic in context — on the fly, without any
+                retraining.
+            </p>
+            <div class="analogy">
+                🧠 <strong>Analogy:</strong> Imagine you're teaching an intern a new
+                task. You could write a manual (zero-shot), or you could sit next
+                to them and say "look — here's input, here's what the output should
+                look like. Now you try." That's few-shot. The intern learns from your
+                live examples much faster than from the manual.
+            </div>
+        </div>
+
+        <!-- The core example: inventing a word -->
+        <div class="section-title">
+            📋 The Key Example — Teaching an Invented Word
+        </div>
+        <p
+            style="font-size:0.84rem;color:#94a3b8;line-height:1.65;margin-bottom:0.8rem;"
+        >
+            The page uses a brilliant example: a made-up word (<em>whatpu</em>)
+            that the AI has never seen. One example is enough for it to
+            understand and use a second made-up word (<em>farduddle</em>)
+            correctly — that's <strong style="color:#e2e8f0;"
+                >in-context learning</strong
+            > in action.
+        </p>
+        <div class="prompt-wrap">
+            <div class="lbl">
+                1-SHOT PROMPT — one example, then the real task
+            </div>
+            <pre><span class="hl-ex">A "whatpu" is a small, furry animal native to Tanzania. An example of a sentence that uses the word whatpu is:
+We were traveling in Africa and we saw these very cute whatpus.</span>
+
+<span class="hl-task">To do a "farduddle" means to jump up and down really fast. An example of a sentence that uses the word farduddle is:</span></pre>
+        </div>
+        <div class="output-wrap">
+            <div class="lbl">OUTPUT</div>
+            <pre>When we won the game, we all started to farduddle in celebration.</pre>
+        </div>
+
+        <div class="two-col">
+            <div class="card purple">
+                <h3>🔮 What did the example teach the AI?</h3>
+                <p>
+                    The first example (whatpu) showed the AI the <em
+                        >template</em
+                    >: definition → sentence using the word naturally. The AI
+                    learned the pattern and applied it to farduddle — a word it
+                    has never seen in its training data. This is pure in-context
+                    learning.
+                </p>
+            </div>
+            <div class="card green">
+                <h3>⚡ What would happen without it?</h3>
+                <p>
+                    Without the whatpu example, the AI would be confused —
+                    "farduddle" doesn't exist in its knowledge. It might make up
+                    a definition, refuse to answer, or produce a grammatically
+                    correct but semantically random sentence. The example is the
+                    anchor.
+                </p>
+            </div>
+        </div>
+
+        <!-- How many shots? Interactive -->
+        <div class="section-title">
+            🎯 How Many Examples Should You Give? — Interactive
+        </div>
+        <p
+            style="font-size:0.84rem;color:#94a3b8;margin-bottom:0.8rem;line-height:1.65;"
+        >
+            The number of examples ("shots") directly affects quality. Click
+            each to understand the tradeoff:
+        </p>
+        <div class="shot-counter">
+            <div class="shot-pill s0 active" onclick="showShot('0', this)">
+                0-shot
+            </div>
+            <div class="shot-pill s1" onclick="showShot('1', this)">1-shot</div>
+            <div class="shot-pill s3" onclick="showShot('3', this)">3-shot</div>
+            <div class="shot-pill s5" onclick="showShot('5', this)">5-shot</div>
+            <div class="shot-pill s10" onclick="showShot('10', this)">
+                10-shot
+            </div>
+        </div>
+
+        <div class="shot-content active" id="shot-0">
+            <div class="card purple">
+                <h3>⚡ 0-Shot — No examples</h3><p>
+                    Just an instruction. Works for common, well-known tasks.
+                    Format and style are unpredictable — the AI decides how to
+                    present the output based on its defaults. <strong
+                        style="color:#e2e8f0;">Start here always.</strong
+                    > If output is good, stop.
+                </p><div class="analogy">
+                    Like asking a skilled professional to do something they've
+                    done many times. No guidance needed.
+                </div>
+            </div>
+        </div>
+        <div class="shot-content" id="shot-1">
+            <div class="card" style="border-left:4px solid #6366f1">
+                <h3>📎 1-Shot — One example</h3><p>
+                    One input→output pair. Enough to teach format, tone, and
+                    basic pattern. <strong style="color:#e2e8f0;"
+                        >Covers 80% of use cases</strong
+                    > where you need a specific output style. Best starting point
+                    after zero-shot fails.
+                </p><div
+                    class="analogy"
+                    style="background:#12151f;border-radius:8px;padding:0.65rem 0.9rem;margin-top:0.7rem;font-size:0.82rem;color:#a78bfa;font-style:italic;"
+                >
+                    Like showing a cook "this is how the dish should look on the
+                    plate" — one photo is usually enough.
+                </div>
+            </div>
+        </div>
+        <div class="shot-content" id="shot-3">
+            <div class="card green">
+                <h3>📎📎📎 3-Shot — Three examples</h3><p>
+                    Covers edge cases and nuance. <strong style="color:#e2e8f0;"
+                        >Research sweet spot</strong
+                    > — 3 examples typically gives the AI enough variety to handle
+                    diverse inputs confidently. Use when 1-shot still produces inconsistent
+                    results. Include a tricky/borderline case.
+                </p><div
+                    class="analogy"
+                    style="background:#12151f;border-radius:8px;padding:0.65rem 0.9rem;margin-top:0.7rem;font-size:0.82rem;color:#4ade80;font-style:italic;"
+                >
+                    Like showing 3 different version of a dish — now the cook
+                    understands the range of what's acceptable.
+                </div>
+            </div>
+        </div>
+        <div class="shot-content" id="shot-5">
+            <div class="card orange">
+                <h3>📎×5 5-Shot — Five examples</h3><p>
+                    For complex or unusual tasks where the AI keeps getting it
+                    wrong. Adds more diversity to the pattern space. <strong
+                        style="color:#e2e8f0;">Watch your token limit</strong
+                    > — each example eats into the context window. Start seeing diminishing
+                    returns here.
+                </p><div
+                    class="analogy"
+                    style="background:#12151f;border-radius:8px;padding:0.65rem 0.9rem;margin-top:0.7rem;font-size:0.82rem;color:#fbbf24;font-style:italic;"
+                >
+                    Good for tasks with a wide range of valid inputs — the more
+                    variety in your examples, the more robust the AI becomes.
+                </div>
+            </div>
+        </div>
+        <div class="shot-content" id="shot-10">
+            <div class="card red">
+                <h3>📎×10 10-Shot — Ten examples</h3><p>
+                    Reserved for very complex, domain-specific tasks.
+                    Significant token cost. <strong style="color:#e2e8f0;"
+                        >If 10-shot still fails</strong
+                    > on reasoning or logic tasks, the technique itself has hit its
+                    ceiling — move to Chain-of-Thought or fine-tuning.
+                </p><div
+                    class="analogy"
+                    style="background:#12151f;border-radius:8px;padding:0.65rem 0.9rem;margin-top:0.7rem;font-size:0.82rem;color:#fb7185;font-style:italic;"
+                >
+                    Like giving a whole portfolio of examples. Powerful, but
+                    expensive. Know when to stop — more examples ≠ always
+                    better.
+                </div>
+            </div>
+        </div>
+
+        <!-- Research findings -->
+        <div class="section-title">
+            🔬 Surprising Research Findings — What Actually Matters in Examples
+        </div>
+        <p
+            style="font-size:0.84rem;color:#94a3b8;margin-bottom:1rem;line-height:1.65;"
+        >
+            The page cites research (Min et al. 2022) that revealed some
+            counterintuitive truths about what makes few-shot examples work.
+            These are genuinely surprising:
+        </p>
+
+        <div class="finding">
+            <div class="f-icon">🏷️</div>
+            <div class="f-body">
+                <h4>
+                    Finding 1: The labels don't need to be correct — the format
+                    matters more
+                </h4>
+                <p>
+                    Research showed that even with <strong style="color:#fff;"
+                        >randomly assigned wrong labels</strong
+                    >, the AI still produces mostly correct answers. The AI
+                    cares more about <em>seeing the structure</em> (input → output)
+                    than whether your example answers are right.
+                </p>
+                <div class="f-takeaway">
+                    → This means: the format of your examples is doing most of
+                    the heavy lifting, not the content accuracy.
+                </div>
+            </div>
+        </div>
+
+        <div class="finding">
+            <div class="f-icon">📐</div>
+            <div class="f-body">
+                <h4>Finding 2: Even random labels beat no labels</h4>
+                <p>
+                    Providing examples with random labels still outperforms
+                    zero-shot (no examples). So even imperfect examples add
+                    value — they establish the task structure and expected
+                    output shape in the AI's context window.
+                </p>
+                <div class="f-takeaway">
+                    → This means: don't stress about getting perfect examples.
+                    Good format + wrong labels &gt; no examples at all.
+                </div>
+            </div>
+        </div>
+
+        <div class="finding">
+            <div class="f-icon">🎲</div>
+            <div class="f-body">
+                <h4>
+                    Finding 3: Label distribution matters more than label
+                    accuracy
+                </h4>
+                <p>
+                    Selecting labels from a <strong style="color:#fff;"
+                        >realistic distribution</strong
+                    > (e.g., 60% negative, 40% positive — matching real-world ratios)
+                    helps more than using perfectly balanced or uniform labels. The
+                    AI learns real-world frequencies from your examples.
+                </p>
+                <div class="f-takeaway">
+                    → This means: reflect real-world proportions in your
+                    examples, not just balanced textbook cases.
+                </div>
+            </div>
+        </div>
+
+        <!-- The random label experiment — interactive -->
+        <div class="section-title">
+            🧪 The Random Label Experiment — See It Live
+        </div>
+        <div class="experiment">
+            <h4>🤯 Even wrong labels produce the right answer</h4>
+            <div class="exp-desc">
+                The page shows 3 versions of the same classification task. Click
+                each to see what the AI does with correct labels, wrong labels,
+                and inconsistent format:
+            </div>
+            <div class="exp-tabs">
+                <div class="exp-tab active" onclick="showExp('correct', this)">
+                    ✅ Correct Labels
+                </div>
+                <div class="exp-tab" onclick="showExp('random', this)">
+                    🎲 Random (Wrong) Labels
+                </div>
+                <div class="exp-tab" onclick="showExp('messy', this)">
+                    🌪️ Messy Format
+                </div>
+            </div>
+
+            <div class="exp-content active" id="exp-correct">
+                <div class="prompt-wrap">
+                    <div class="lbl">PROMPT</div>
+                    <pre>This is awesome! // <span class="hl-label">Positive</span>
+This is bad! // <span class="hl-label">Negative</span>
+Wow that movie was rad! // <span class="hl-label">Positive</span>
+What a horrible show! //</pre>
+                </div>
+                <div class="output-wrap">
+                    <div class="lbl">OUTPUT</div><pre>Negative</pre>
+                </div>
+                <div class="exp-verdict pass">
+                    ✅ Correct answer. Labels are right, format is consistent.
+                    Expected.
+                </div>
+            </div>
+
+            <div class="exp-content" id="exp-random">
+                <div class="prompt-wrap">
+                    <div class="lbl">
+                        PROMPT — labels are intentionally WRONG
+                    </div>
+                    <pre>This is awesome! // <span class="hl-label">Negative</span>  ← wrong!
+This is bad! // <span class="hl-label">Positive</span>  ← wrong!
+Wow that movie was rad! // <span class="hl-label">Positive</span>  ← wrong!
+What a horrible show! //</pre>
+                </div>
+                <div class="output-wrap">
+                    <div class="lbl">OUTPUT</div><pre>Negative</pre>
+                </div>
+                <div class="exp-verdict warn">
+                    🤯 Still correct! AI ignored the wrong labels and understood
+                    the task from the FORMAT and INPUT structure alone. The
+                    labels were wrong but the AI got the right answer anyway.
+                </div>
+            </div>
+
+            <div class="exp-content" id="exp-messy">
+                <div class="prompt-wrap">
+                    <div class="lbl">PROMPT — inconsistent format</div>
+                    <pre>Positive This is awesome!
+This is bad! Negative
+Wow that movie was rad!
+Positive
+What a horrible show! --</pre>
+                </div>
+                <div class="output-wrap">
+                    <div class="lbl">OUTPUT</div><pre>Negative</pre>
+                </div>
+                <div class="exp-verdict warn">
+                    🤯 Still correct! Even with no consistent separator, no
+                    consistent label placement — the AI still figured out the
+                    task. Modern models are surprisingly robust to format noise.
+                    (But don't rely on this — clean format is still best
+                    practice.)
+                </div>
+            </div>
+        </div>
+
+        <!-- The Hard Limit: Reasoning -->
+        <div class="section-title">
+            🚧 The Big Limitation — Where Few-Shot Breaks Down
+        </div>
+        <div class="limit-box">
+            <h4>
+                ❌ Few-Shot Fails on Complex Reasoning — Even with 5 Examples
+            </h4>
+            <p>
+                The page proves this with the odd-numbers math task. Even with 4
+                worked examples showing the correct answers, the AI gets the 5th
+                one wrong. Why? Because the AI is learning to <em
+                    >copy the output format</em
+                > from examples — but it's not being shown <em
+                    >how to reason through the problem step by step</em
+                >. The examples show "what" but not "how".
+            </p>
+            <div class="solution">
+                ✅ The fix: Chain-of-Thought (CoT) prompting — the next
+                technique. Instead of showing input→output examples, you show
+                input→step1→step2→output. Teaching the reasoning path, not just
+                the answer.
+            </div>
+        </div>
+
+        <div class="prompt-wrap">
+            <div class="lbl">
+                FEW-SHOT WITH 4 EXAMPLES — still fails on reasoning
+            </div>
+            <pre>The odd numbers in this group add up to an even number: 4, 8, 9, 15, 12, 2, 1.
+A: The answer is False.
+
+The odd numbers in this group add up to an even number: 17, 10, 19, 4, 8, 12, 24.
+A: The answer is True.
+
+The odd numbers in this group add up to an even number: 16, 11, 14, 4, 8, 13, 24.
+A: The answer is True.
+
+The odd numbers in this group add up to an even number: 17, 9, 10, 12, 13, 4, 2.
+A: The answer is False.
+
+The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1.
+A:</pre>
+        </div>
+        <div class="output-wrap wrong">
+            <div class="lbl">OUTPUT — WRONG even with 4 examples!</div>
+            <pre>The answer is True.  ← Incorrect. The correct answer is False (15+5+13+7+1 = 41, which is odd)</pre>
+        </div>
+        <p
+            style="font-size:0.82rem;color:#94a3b8;margin-top:0.5rem;line-height:1.6;"
+        >
+            The AI memorized the output <em>pattern</em> ("The answer is True/False")
+            but never actually did the math. It's pattern-matching, not reasoning.
+            This is the ceiling of few-shot.
+        </p>
+
+        <!-- The escalation ladder -->
+        <div class="section-title">
+            📶 The Escalation Ladder — When to Move Up
+        </div>
+        <div class="ladder">
+            <div class="rung r1">
+                <div class="r-num">1</div>
+                <div class="r-text">
+                    <h5>⚡ Zero-Shot — Always try first</h5>
+                    <p>
+                        Simple instruction, no examples. Fast, free, no setup.
+                        Works for common tasks.
+                    </p>
+                </div>
+            </div>
+            <div class="rung-arrow">
+                ↓ If output format is wrong or quality is poor
+            </div>
+            <div class="rung r2">
+                <div class="r-num">2</div>
+                <div class="r-text">
+                    <h5>📎 Few-Shot — Add 1–3 examples</h5>
+                    <p>
+                        Show the AI what you want. Fixes format issues and
+                        improves consistency. Sweet spot for most tasks.
+                    </p>
+                </div>
+            </div>
+            <div class="rung-arrow">
+                ↓ If task involves reasoning, math, or multi-step logic
+            </div>
+            <div class="rung r3">
+                <div class="r-num">3</div>
+                <div class="r-text">
+                    <h5>🧠 Chain-of-Thought — Show the reasoning steps</h5>
+                    <p>
+                        Add step-by-step reasoning to your examples. Forces the
+                        AI to think, not just pattern-match. Next page!
+                    </p>
+                </div>
+            </div>
+            <div class="rung-arrow">
+                ↓ If still failing on very domain-specific tasks
+            </div>
+            <div class="rung r4">
+                <div class="r-num">4</div>
+                <div class="r-text">
+                    <h5>🔧 Fine-Tuning — Retrain the model on your data</h5>
+                    <p>
+                        Last resort. Expensive. But gives you a model that's
+                        genuinely specialized for your use case.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-banner">
+            <span style="font-size:1.4rem;flex-shrink:0;">💡</span>
+            <p>
+                <strong>Key Takeaways:</strong>
+                (1) Few-shot = show examples, not just instructions. Format matters
+                more than label accuracy. (2) 1–3 examples is usually enough. More
+                isn't always better — it costs tokens. (3) Even wrong labels help,
+                because the AI learns task structure from the format. (4) Few-shot
+                hits a hard ceiling on reasoning tasks — that's what Chain-of-Thought
+                is for, which is next.
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #a78bfa;
+        margin: 2rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #2d3348;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 1.75rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.93rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.83rem;
+        transition: background 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Cards */
+    .card {
+        background: #1e2130;
+        border: 1px solid #2d3348;
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .card.purple {
+        border-left: 4px solid #6366f1;
+    }
+    .card.green {
+        border-left: 4px solid #059669;
+    }
+    .card.orange {
+        border-left: 4px solid #d97706;
+    }
+    .card.red {
+        border-left: 4px solid #e11d48;
+    }
+    .card h3 {
+        font-size: 1rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
+    .card p {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.68;
+    }
+    .card .analogy {
+        margin-top: 0.8rem;
+        background: #12151f;
+        border-radius: 8px;
+        padding: 0.65rem 0.9rem;
+        font-size: 0.82rem;
+        color: #a78bfa;
+        font-style: italic;
+        line-height: 1.55;
+    }
+
+    /* Prompt/output blocks */
+    .prompt-wrap {
+        background: #12151f;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin: 0.7rem 0 0.3rem;
+    }
+    .prompt-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+    .prompt-wrap pre {
+        font-family: monospace;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        line-height: 1.8;
+        color: #c7d2fe;
+    }
+    .output-wrap {
+        background: #111a14;
+        border-radius: 10px;
+        padding: 0.7rem 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+    .output-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #4ade8066;
+        margin-bottom: 0.3rem;
+    }
+    .output-wrap pre {
+        font-family: monospace;
+        font-size: 0.81rem;
+        color: #86efac;
+    }
+    .output-wrap.wrong {
+        background: #1e1515;
+    }
+    .output-wrap.wrong .lbl {
+        color: #f8717166;
+    }
+    .output-wrap.wrong pre {
+        color: #fca5a5;
+    }
+
+    /* Shot counter visual */
+    .shot-counter {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+    }
+    .shot-pill {
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border: 1px solid;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .shot-pill.s0 {
+        background: #1e2130;
+        border-color: #2d3348;
+        color: #64748b;
+    }
+    .shot-pill.s1 {
+        background: #1e1f3a;
+        border-color: #6366f133;
+        color: #a78bfa;
+    }
+    .shot-pill.s3 {
+        background: #1a3a2a;
+        border-color: #05966933;
+        color: #4ade80;
+    }
+    .shot-pill.s5 {
+        background: #2a2a1a;
+        border-color: #d9780633;
+        color: #fbbf24;
+    }
+    .shot-pill.s10 {
+        background: #2a1a1f;
+        border-color: #e11d4833;
+        color: #fb7185;
+    }
+    .shot-pill.active {
+        filter: brightness(1.3);
+        box-shadow: 0 0 10px #6366f144;
+    }
+    .shot-content {
+        display: none;
+    }
+    .shot-content.active {
+        display: block;
+        animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Grid layouts */
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    @media (max-width: 600px) {
+        .two-col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Research findings */
+    .finding {
+        background: #12151f;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 0.8rem;
+        display: flex;
+        gap: 0.9rem;
+        align-items: flex-start;
+    }
+    .finding .f-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .finding .f-body h4 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.3rem;
+    }
+    .finding .f-body p {
+        font-size: 0.81rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .finding .f-body .f-takeaway {
+        font-size: 0.78rem;
+        color: #fbbf24;
+        margin-top: 0.4rem;
+        font-style: italic;
+    }
+
+    /* Random label experiment */
+    .experiment {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 14px;
+        padding: 1.3rem;
+        margin: 1rem 0;
+    }
+    .experiment h4 {
+        font-size: 0.9rem;
+        color: #fff;
+        margin-bottom: 0.4rem;
+    }
+    .experiment .exp-desc {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+    .exp-tabs {
+        display: flex;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .exp-tab {
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #12151f;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+    .exp-tab.active {
+        background: #6366f1;
+        color: #fff;
+        border-color: #6366f1;
+    }
+    .exp-content {
+        display: none;
+    }
+    .exp-content.active {
+        display: block;
+        animation: fadeIn 0.2s;
+    }
+    .exp-verdict {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0.9rem;
+        border-radius: 8px;
+    }
+    .exp-verdict.pass {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .exp-verdict.fail {
+        background: #3a1e1e;
+        color: #f87171;
+    }
+    .exp-verdict.warn {
+        background: #2a2a1a;
+        color: #fbbf24;
+    }
+
+    /* Limitation breakdown */
+    .limit-box {
+        background: #1e1515;
+        border: 1px solid #5c262644;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin: 1rem 0;
+    }
+    .limit-box h4 {
+        font-size: 0.88rem;
+        color: #fb7185;
+        margin-bottom: 0.7rem;
+    }
+    .limit-box p {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        line-height: 1.65;
+    }
+    .limit-box .solution {
+        margin-top: 0.8rem;
+        background: #12151f;
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.81rem;
+        color: #4ade80;
+    }
+
+    /* Escalation ladder */
+    .ladder {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    .rung {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: #1e2130;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border-left: 4px solid;
+    }
+    .rung.r1 {
+        border-color: #6366f1;
+    }
+    .rung.r2 {
+        border-color: #059669;
+    }
+    .rung.r3 {
+        border-color: #d97706;
+    }
+    .rung.r4 {
+        border-color: #e11d48;
+    }
+    .rung .r-num {
+        font-size: 1.1rem;
+        font-weight: 800;
+        width: 28px;
+        flex-shrink: 0;
+    }
+    .rung.r1 .r-num {
+        color: #a78bfa;
+    }
+    .rung.r2 .r-num {
+        color: #4ade80;
+    }
+    .rung.r3 .r-num {
+        color: #fbbf24;
+    }
+    .rung.r4 .r-num {
+        color: #fb7185;
+    }
+    .rung .r-text h5 {
+        font-size: 0.85rem;
+        color: #fff;
+        margin-bottom: 0.15rem;
+    }
+    .rung .r-text p {
+        font-size: 0.78rem;
+        color: #64748b;
+    }
+    .rung-arrow {
+        text-align: center;
+        color: #3b4268;
+        font-size: 1rem;
+    }
+
+    .tip-banner {
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .tip-banner p {
+        font-size: 0.87rem;
+        color: #94a3b8;
+        line-height: 1.65;
+    }
+    .tip-banner strong {
+        color: #e2e8f0;
+    }
+
+    .hl-ex {
+        color: #4ade80;
+        font-weight: 600;
+    }
+    .hl-task {
+        color: #fbbf24;
+    }
+    .hl-label {
+        color: #fb7185;
+    }
+</style>
+
+<script is:inline>
+    function showShot(id, el) {
+        document
+            .querySelectorAll(".shot-content")
+            .forEach((e) => e.classList.remove("active"));
+        document
+            .querySelectorAll(".shot-pill")
+            .forEach((e) => e.classList.remove("active"));
+        document.getElementById("shot-" + id).classList.add("active");
+        el.classList.add("active");
+    }
+    function showExp(id, el) {
+        document
+            .querySelectorAll(".exp-content")
+            .forEach((e) => e.classList.remove("active"));
+        document
+            .querySelectorAll(".exp-tab")
+            .forEach((e) => e.classList.remove("active"));
+        document.getElementById("exp-" + id).classList.add("active");
+        el.classList.add("active");
+    }
+</script>
