@@ -911,7 +911,7 @@ Solve by breaking the problem into steps. First, identify the odd numbers, add t
                 >
             </div>
         </div>
-    </body>
+    </div>
 </Layout>
 <style>
     h1 {
@@ -1267,18 +1267,29 @@ Solve by breaking the problem into steps. First, identify the odd numbers, add t
         color: #e2e8f0;
     }
 </style>
-<script>
-    let current = 0;
-    function goTo(n: number) {
-        (
-            document.getElementById("page-" + current) as HTMLElement
-        ).classList.remove("active");
-        document.querySelectorAll(".tab")[current].classList.remove("active");
-        current = n;
-        (document.getElementById("page-" + n) as HTMLElement).classList.add(
-            "active",
-        );
-        document.querySelectorAll(".tab")[n].classList.add("active");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-</script>
+
+<Fragment slot="footer">
+    <script>
+        let current = 0;
+
+        // Attach to the window object so inline onclick handlers can access it.
+        // (Using 'as any' prevents TypeScript from throwing a strict type error).
+        (window as any).goTo = function (n: number) {
+            (
+                document.getElementById("page-" + current) as HTMLElement
+            ).classList.remove("active");
+            document
+                .querySelectorAll(".tab")
+                [current].classList.remove("active");
+
+            current = n;
+
+            (document.getElementById("page-" + n) as HTMLElement).classList.add(
+                "active",
+            );
+            document.querySelectorAll(".tab")[n].classList.add("active");
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+    </script>
+</Fragment>
