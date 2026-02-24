@@ -1,0 +1,1299 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Prompt Examples">
+    <div class="container">
+        <h1>🔬 Examples of Prompts — Dissected</h1>
+        <p class="subtitle">
+            7 real examples broken down: what technique was used, how it shaped
+            the output, what breaks if you skip it — plus extra insights
+        </p>
+        <div class="doc-link">
+            <a
+                href="https://www.promptingguide.ai/introduction/examples"
+                target="_blank">📄 View Original Docs — promptingguide.ai</a
+            >
+        </div>
+
+        <!-- Color legend -->
+        <div class="legend">
+            <div class="leg">
+                <div class="leg-dot" style="background:#a78bfa"></div> Instruction
+            </div>
+            <div class="leg">
+                <div class="leg-dot" style="background:#4ade80"></div> Context
+            </div>
+            <div class="leg">
+                <div class="leg-dot" style="background:#fbbf24"></div> Input Data
+            </div>
+            <div class="leg">
+                <div class="leg-dot" style="background:#fb7185"></div> Output Indicator
+            </div>
+            <div class="leg">
+                <div class="leg-dot" style="background:#38bdf8"></div> Format Hint
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <div class="tab active" onclick="goTo(0)">📝 Summarization</div>
+            <div class="tab" onclick="goTo(1)">🔍 Info Extraction</div>
+            <div class="tab" onclick="goTo(2)">❓ Question Answering</div>
+            <div class="tab" onclick="goTo(3)">🏷️ Classification</div>
+            <div class="tab" onclick="goTo(4)">💬 Conversation</div>
+            <div class="tab" onclick="goTo(5)">💻 Code Generation</div>
+            <div class="tab" onclick="goTo(6)">🧮 Reasoning</div>
+        </div>
+
+        <!-- ===== PAGE 0: TEXT SUMMARIZATION ===== -->
+        <div class="page active" id="page-0">
+            <div class="page-header">
+                <h2>📝 1. Text Summarization</h2>
+                <p>
+                    The goal: take long content and compress it into something
+                    short and clear. Two variations are shown — one that
+                    generates content, one that compresses existing content.
+                </p>
+            </div>
+
+            <div class="prompt-wrap">
+                <div class="lbl">
+                    PROMPT — VERSION 1 (Generate then summarize)
+                </div>
+                <pre><span class="hl-instruction">Explain antibiotics</span>
+
+<span class="hl-output-ind">A:</span></pre>
+            </div>
+            <div class="output-wrap">
+                <div class="lbl">OUTPUT</div>
+                <pre>Antibiotics are a type of medication used to treat bacterial infections. They work by either killing the bacteria or preventing them from reproducing...</pre>
+            </div>
+
+            <div class="prompt-wrap">
+                <div class="lbl">
+                    PROMPT — VERSION 2 (Summarize existing text)
+                </div>
+                <pre><span class="hl-input">Antibiotics are a type of medication used to treat bacterial infections. They work by either killing the bacteria or preventing them from reproducing, allowing the body's immune system to fight off the infection...</span>
+
+<span class="hl-instruction">Explain the above in one sentence:</span></pre>
+            </div>
+            <div class="output-wrap">
+                <div class="lbl">OUTPUT</div>
+                <pre>Antibiotics are medications used to treat bacterial infections by either killing the bacteria or stopping them from reproducing, but they are not effective against viruses and overuse can lead to antibiotic resistance.</pre>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Output Indicator</strong> ("A:") — signals to
+                            the AI that an answer is expected, like a QA format
+                        </li>
+                        <li>
+                            <strong>Constraint instruction</strong> ("in one sentence")
+                            — limits the response length with a concrete rule
+                        </li>
+                        <li>
+                            <strong>Input-first pattern</strong> — the text is given
+                            first, then the instruction at the bottom tells the AI
+                            what to do with it
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            "A:" triggered a factual, informative response style
+                        </li>
+                        <li>
+                            "in one sentence" forced the AI to compress and
+                            prioritize — it kept only the most essential facts
+                        </li>
+                        <li>
+                            Putting the text first then instruction after works
+                            because AI reads everything before responding
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove "in one sentence" → AI gives a full paragraph
+                            or even bullet points — unpredictable length
+                        </li>
+                        <li>
+                            Remove "A:" → AI might continue the sentence instead
+                            of answering ("Antibiotics are…" just becomes a
+                            completion)
+                        </li>
+                        <li>
+                            Put instruction before text → AI might start
+                            responding before "reading" the context
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            You can replace "one sentence" with "3 bullet
+                            points", "a tweet (under 280 chars)", "a headline" —
+                            same pattern, different output
+                        </li>
+                        <li>
+                            Adding audience changes the language: "explain to a
+                            10-year-old" vs "explain to a doctor"
+                        </li>
+                        <li>
+                            This exact pattern is used in EdTech to
+                            auto-generate lesson summaries from long content
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" disabled>← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(1)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- ===== PAGE 1: INFO EXTRACTION ===== -->
+        <div class="page" id="page-1">
+            <div class="page-header">
+                <h2>🔍 2. Information Extraction</h2>
+                <p>
+                    The goal: pull out a specific piece of data from a large
+                    block of text, like finding a needle in a haystack.
+                </p>
+            </div>
+
+            <div class="prompt-wrap">
+                <div class="lbl">PROMPT</div>
+                <pre><span class="hl-input">Author-contribution statements and acknowledgements in research papers should state clearly and specifically whether, and to what extent, the authors used AI technologies such as ChatGPT in the preparation of their manuscript...</span>
+
+<span class="hl-instruction">Mention the large language model based product mentioned in the paragraph above:</span></pre>
+            </div>
+            <div class="output-wrap">
+                <div class="lbl">OUTPUT</div>
+                <pre>The large language model based product mentioned in the paragraph above is ChatGPT.</pre>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Input first, instruction last</strong> — the text
+                            block is given, then a precise extraction instruction
+                            follows
+                        </li>
+                        <li>
+                            <strong>Anchor phrase</strong> ("mentioned in the paragraph
+                            above") — tells the AI to extract from the given text
+                            only, not from general knowledge
+                        </li>
+                        <li>
+                            <strong>Specific target</strong> ("large language model
+                            based product") — narrows down exactly what to find
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            Phrase "above" scopes the AI to the provided text —
+                            prevents hallucination
+                        </li>
+                        <li>
+                            Specific category ("LLM based product") filters out
+                            irrelevant mentions
+                        </li>
+                        <li>
+                            Result is a clean, short, factual sentence — not a
+                            wall of text
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove "in the paragraph above" → AI might start
+                            listing all LLMs it knows (GPT-4, Gemini, Claude...)
+                            from general knowledge
+                        </li>
+                        <li>
+                            Say "find all AI tools" instead → AI might include
+                            vague mentions or invent things not in the text
+                        </li>
+                        <li>
+                            No input text provided → AI can only guess or make
+                            things up
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            Add a format for cleaner results: <em
+                                >"Return as: Product: [name]"</em
+                            >
+                        </li>
+                        <li>
+                            This technique powers features like: auto-tagging
+                            articles, extracting student names from reports,
+                            pulling prices from product pages
+                        </li>
+                        <li>
+                            For your EdTech platform: extract subject topics,
+                            teacher names, or dates from uploaded documents
+                            automatically
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(0)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(2)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- ===== PAGE 2: QUESTION ANSWERING ===== -->
+        <div class="page" id="page-2">
+            <div class="page-header">
+                <h2>❓ 3. Question Answering</h2>
+                <p>
+                    The goal: get a specific, short, accurate answer — and
+                    control what the AI does when it doesn't know the answer.
+                </p>
+            </div>
+
+            <div class="prompt-wrap">
+                <div class="lbl">PROMPT (all 4 elements used)</div>
+                <pre><span class="hl-instruction">Answer the question based on the context below. Keep the answer short and concise. Respond "Unsure about answer" if not sure about the answer.</span>
+
+<span class="hl-context">Context: Teplizumab traces its roots to a New Jersey drug company called Ortho Pharmaceutical. There, scientists generated an early version of the antibody, dubbed OKT3. Originally sourced from mice, the molecule was able to bind to the surface of T cells...</span>
+
+<span class="hl-input">Question: What was OKT3 originally sourced from?</span>
+
+<span class="hl-output-ind">Answer:</span></pre>
+            </div>
+            <div class="output-wrap">
+                <div class="lbl">OUTPUT</div>
+                <pre>Mice.</pre>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            All 4 prompt elements: <strong
+                                >Instruction + Context + Input + Output
+                                Indicator</strong
+                            >
+                        </li>
+                        <li>
+                            <strong>Constraint</strong>: "short and concise" —
+                            length control
+                        </li>
+                        <li>
+                            <strong>Fallback instruction</strong>: "Respond
+                            'Unsure about answer' if not sure" — handles
+                            uncertainty safely
+                        </li>
+                        <li>
+                            <strong>Output Indicator</strong>: "Answer:" —
+                            anchors where the reply goes
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            The context grounded the AI — it answered from the
+                            text, not from training data
+                        </li>
+                        <li>
+                            "Short and concise" → one-word answer "Mice." —
+                            perfectly minimal
+                        </li>
+                        <li>
+                            Fallback instruction prevents the AI from guessing
+                            or hallucinating when unsure
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove context → AI answers from general knowledge —
+                            could be wrong or outdated
+                        </li>
+                        <li>
+                            Remove fallback → AI invents a confident-sounding
+                            wrong answer instead of admitting uncertainty
+                        </li>
+                        <li>
+                            Remove "short and concise" → AI gives a full
+                            paragraph explanation when you just needed one word
+                        </li>
+                        <li>
+                            Remove "Answer:" → AI might ramble or re-ask the
+                            question before answering
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            The fallback instruction ("Unsure about answer") is <strong
+                                >critical for production apps</strong
+                            > — it stops the AI from confidently lying
+                        </li>
+                        <li>
+                            This exact pattern = a RAG (Retrieval-Augmented
+                            Generation) system in its simplest form — used in
+                            chatbots that answer from documents
+                        </li>
+                        <li>
+                            For your EdTech platform: students ask questions, AI
+                            answers only from the lesson content provided
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(1)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(3)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- ===== PAGE 3: TEXT CLASSIFICATION ===== -->
+        <div class="page" id="page-3">
+            <div class="page-header">
+                <h2>🏷️ 4. Text Classification</h2>
+                <p>
+                    The goal: assign a label to a piece of text. This example
+                    also demonstrates something subtle but important — how a
+                    typo in a label is silently "corrected" by the AI, and how
+                    to control exact output format using examples.
+                </p>
+            </div>
+
+            <div class="variants" style="margin-bottom:1rem;">
+                <div class="v-box bad">
+                    <div class="v-lbl">❌ NO EXAMPLE — WRONG FORMAT</div>
+                    <pre>Classify the text into neutral, negative or positive.
+
+Text: I think the food was okay.
+Sentiment:</pre>
+                    <div class="v-note">
+                        Output: "Neutral" (capital N — not what was wanted)
+                    </div>
+                </div>
+                <div class="v-box good">
+                    <div class="v-lbl">✅ WITH 1 EXAMPLE — CORRECT FORMAT</div>
+                    <pre>Classify the text into neutral, negative or positive.
+
+Text: I think the vacation is okay.
+Sentiment: neutral
+
+Text: I think the food was okay.
+Sentiment:</pre>
+                    <div class="v-note">
+                        Output: "neutral" (lowercase — exactly as shown in
+                        example)
+                    </div>
+                </div>
+            </div>
+
+            <div class="bonus-insight">
+                <div class="bi-title">
+                    🚨 The Typo Experiment — A Hidden Lesson
+                </div>
+                <p>
+                    The docs showed a prompt with <strong>"nutral"</strong> (misspelled)
+                    as a label. The AI ignored it and returned <strong
+                        >"Neutral"</strong
+                    > — correcting the typo silently. This proves the AI has its own
+                    bias toward known words. If you need a custom label format (like
+                    a status code, or a specific tag), you <strong
+                        >must use examples</strong
+                    > — you can't just name them.
+                </p>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Few-shot example</strong>: one labeled
+                            example before the real input teaches the exact
+                            format
+                        </li>
+                        <li>
+                            <strong>Output Indicator</strong>: "Sentiment:"
+                            anchors the expected response
+                        </li>
+                        <li>
+                            <strong>Label enumeration</strong>: listing all
+                            options ("neutral, negative or positive") scopes the
+                            AI
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            The example "Sentiment: neutral" taught the AI: use
+                            lowercase, return one word only
+                        </li>
+                        <li>
+                            Without the example, AI defaulted to its own
+                            formatting preference (capitalized)
+                        </li>
+                        <li>
+                            The example overrides the AI's default behavior —
+                            this is the power of few-shot
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove example → format becomes unpredictable:
+                            "Neutral", "NEUTRAL", "The sentiment is neutral"
+                        </li>
+                        <li>
+                            Use a typo/custom label without example → AI
+                            silently corrects it to its nearest known word
+                        </li>
+                        <li>
+                            Remove label list → AI might use its own labels:
+                            "positive vibe", "somewhat negative", etc.
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            This is the core of every <strong
+                                >AI-powered moderation or tagging system</strong
+                            >
+                        </li>
+                        <li>
+                            Real use: auto-classify student feedback as
+                            "positive/needs-attention/critical" in your EdTech
+                            platform
+                        </li>
+                        <li>
+                            Pro tip: 2-3 examples cover edge cases better than 1
+                            — include a borderline case in your examples
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(2)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(4)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- ===== PAGE 4: CONVERSATION ===== -->
+        <div class="page" id="page-4">
+            <div class="page-header">
+                <h2>💬 5. Conversation (Role Prompting)</h2>
+                <p>
+                    The goal: make the AI adopt a specific personality, tone, or
+                    expertise level for an entire conversation. This is called <strong
+                        >role prompting</strong
+                    >.
+                </p>
+            </div>
+
+            <div class="variants">
+                <div
+                    class="v-box bad"
+                    style="background:#111828; border-color:#1e3a5f55;"
+                >
+                    <div class="v-lbl" style="color:#60a5fa;">
+                        🔬 TECHNICAL ROLE
+                    </div>
+                    <pre>The following is a conversation with an AI research assistant. The assistant tone is technical and scientific.
+
+H: Can you tell me about black holes?
+AI:</pre>
+                    <div class="v-note" style="color:#60a5fa;">
+                        Output uses: "singularity", "spacetime", "gravitational
+                        force" — complex language
+                    </div>
+                </div>
+                <div class="v-box good">
+                    <div class="v-lbl">🎒 SIMPLE ROLE (primary school)</div>
+                    <pre>The following is a conversation with an AI research assistant. The assistant answers should be easy to understand even by primary school students.
+
+H: Can you tell me about black holes?
+AI:</pre>
+                    <div class="v-note">
+                        Output uses: "massive star runs out of fuel", "nothing
+                        can escape" — simple, friendly
+                    </div>
+                </div>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>System-level role instruction</strong>: sets
+                            the AI's entire persona before the conversation
+                            begins
+                        </li>
+                        <li>
+                            <strong>Tone specifier</strong>: "technical and
+                            scientific" vs "easy to understand" — both change
+                            the vocabulary and depth
+                        </li>
+                        <li>
+                            <strong>Conversation format</strong>: "H:" / "AI:"
+                            labels simulate a chat, helping the AI understand
+                            the structure
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            Same question, two totally different answers — only
+                            the role instruction changed
+                        </li>
+                        <li>"Technical" → jargon-heavy, assumes knowledge</li>
+                        <li>
+                            "Primary school" → analogies, simple words, shorter
+                            sentences
+                        </li>
+                        <li>
+                            The role persists through the whole conversation,
+                            not just one reply
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove the role → AI defaults to a generic,
+                            average-complexity response — no personality
+                        </li>
+                        <li>
+                            Vague role like "be helpful" → no change, AI ignores
+                            it as too obvious
+                        </li>
+                        <li>
+                            Inconsistent role mid-conversation → AI gets
+                            confused and drops the persona
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            Role prompting is the foundation of every AI chatbot
+                            with a personality
+                        </li>
+                        <li>
+                            More powerful roles: "You are a Socratic tutor —
+                            never give answers, only ask guiding questions"
+                        </li>
+                        <li>
+                            For your EdTech platform: role = "You are a patient
+                            teacher helping Egyptian K-12 students understand
+                            math" — instant tutoring bot persona
+                        </li>
+                        <li>
+                            You can also assign a role to control language:
+                            "Respond only in Arabic"
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(3)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(5)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- ===== PAGE 5: CODE GENERATION ===== -->
+        <div class="page" id="page-5">
+            <div class="page-header">
+                <h2>💻 6. Code Generation</h2>
+                <p>
+                    The goal: generate working code. Two patterns are shown — a
+                    natural-language comment style, and a structured schema
+                    description style for SQL.
+                </p>
+            </div>
+
+            <div class="variants">
+                <div class="v-box good" style="border-color:#05966955;">
+                    <div class="v-lbl">✅ PATTERN 1 — Comment style</div>
+                    <pre>/*
+Ask the user for their name and say "Hello"
+*/</pre>
+                    <div class="v-note">
+                        Output: Working JavaScript — AI inferred the language
+                        from context!
+                    </div>
+                </div>
+                <div class="v-box good" style="border-color:#05966955;">
+                    <div class="v-lbl">✅ PATTERN 2 — Schema + task</div>
+                    <pre>"""
+Table departments, columns = [DepartmentId, DepartmentName]
+Table students, columns = [DepartmentId, StudentId, StudentName]
+Create a MySQL query for all students in the Computer Science Department
+"""</pre>
+                    <div class="v-note">
+                        Output: Perfect SQL JOIN query — AI understood the
+                        schema structure
+                    </div>
+                </div>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Code comment format</strong> (/* */ or """ """)
+                            — tells the AI "this is a coding context"
+                        </li>
+                        <li>
+                            <strong>Schema as context</strong> — table names and columns
+                            give the AI the "database map" to write from
+                        </li>
+                        <li>
+                            <strong>Natural language task</strong> at the end of the
+                            schema — the instruction is embedded inside the context
+                        </li>
+                        <li>
+                            No explicit "write in JavaScript" — AI inferred the
+                            language from the comment style
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            Comment format triggered code-generation mode in the
+                            AI
+                        </li>
+                        <li>
+                            Schema context gave the AI exact column names — zero
+                            guessing, correct JOIN condition
+                        </li>
+                        <li>
+                            AI returned production-ready SQL with proper
+                            subquery — not a generic template
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove schema → AI guesses column names ("id",
+                            "name") — probably won't match your real DB
+                        </li>
+                        <li>
+                            Remove comment delimiters → AI might explain the
+                            task in prose instead of writing code
+                        </li>
+                        <li>
+                            Ask vaguely ("write some SQL") → you get a generic
+                            example, not something for your specific tables
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            Always specify the language explicitly when in
+                            doubt: "Write in TypeScript", "Use .NET 8 syntax"
+                        </li>
+                        <li>
+                            For your Angular + .NET stack: paste your
+                            interface/model definition as context, then ask to
+                            generate the service or controller
+                        </li>
+                        <li>
+                            Add constraints: "Use async/await", "Add error
+                            handling", "Follow REST conventions"
+                        </li>
+                        <li>
+                            Ask AI to explain its own code: add "Then explain
+                            each line" after the code request
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(4)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(6)">Next →</button
+                >
+            </div>
+        </div>
+
+        <!-- ===== PAGE 6: REASONING ===== -->
+        <div class="page" id="page-6">
+            <div class="page-header">
+                <h2>🧮 7. Reasoning</h2>
+                <p>
+                    The goal: get the AI to solve a problem that requires
+                    multiple steps of thinking. This example reveals a critical
+                    insight — <strong
+                        >AI can get math wrong if you just ask for the answer
+                        directly.</strong
+                    > Breaking the problem into steps fixes it.
+                </p>
+            </div>
+
+            <div class="variants">
+                <div class="v-box bad">
+                    <div class="v-lbl">❌ DIRECT QUESTION — WRONG ANSWER</div>
+                    <pre>The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1.
+
+A:</pre>
+                    <div class="v-note">
+                        Output: "No, they add up to 119 (odd)" — Wrong! AI
+                        didn't verify step by step
+                    </div>
+                </div>
+                <div class="v-box good">
+                    <div class="v-lbl">
+                        ✅ STEP-BY-STEP INSTRUCTION — CORRECT
+                    </div>
+                    <pre>The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1.
+
+Solve by breaking the problem into steps. First, identify the odd numbers, add them, and indicate whether the result is odd or even.</pre>
+                    <div class="v-note">
+                        Output: "Odd numbers: 15,5,13,7,1 → Sum: 41 → Odd" —
+                        Correct and transparent!
+                    </div>
+                </div>
+            </div>
+
+            <div class="dissect">
+                <div class="dissect-card used">
+                    <h4>🔮 What techniques were used?</h4>
+                    <ul>
+                        <li>
+                            <strong>Chain-of-Thought prompting</strong>:
+                            "breaking into steps" forces the AI to show its work
+                        </li>
+                        <li>
+                            <strong>Sub-task decomposition</strong>: identify →
+                            add → classify — three explicit mini-instructions
+                        </li>
+                        <li>
+                            <strong>No answer given in the prompt</strong>: the
+                            statement "add up to even" is the claim to verify,
+                            not a fact
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card effect">
+                    <h4>⚡ How did it affect the output?</h4>
+                    <ul>
+                        <li>
+                            Step-by-step instruction forced the AI to slow down
+                            and actually do the arithmetic
+                        </li>
+                        <li>
+                            The output became transparent — you can see where it
+                            went right or wrong
+                        </li>
+                        <li>
+                            Without steps: AI jumped to a guess. With steps: AI
+                            produced a verifiable chain of logic
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card violate">
+                    <h4>💥 What breaks if you remove it?</h4>
+                    <ul>
+                        <li>
+                            Remove step instructions → AI guesses the final
+                            answer in one leap — often wrong on tricky problems
+                        </li>
+                        <li>
+                            Ask "is this true?" instead of "solve it step by
+                            step" → AI might just agree with the premise
+                        </li>
+                        <li>
+                            Assume AI is always good at math → it's not. For
+                            anything beyond basic arithmetic, always ask for
+                            steps
+                        </li>
+                    </ul>
+                </div>
+                <div class="dissect-card bonus">
+                    <h4>🎁 Extra from me</h4>
+                    <ul>
+                        <li>
+                            This is called <strong
+                                >Chain-of-Thought (CoT)</strong
+                            > prompting — one of the most powerful techniques
+                        </li>
+                        <li>
+                            The magic phrase: <em>"Let's think step by step"</em
+                            > — research shows this alone improves AI reasoning significantly
+                        </li>
+                        <li>
+                            Use it for: debugging logic, solving word problems,
+                            planning tasks, writing algorithms
+                        </li>
+                        <li>
+                            For your EdTech: ask AI to generate step-by-step
+                            math solutions that students can follow, not just
+                            final answers
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bonus-insight">
+                <div class="bi-title">
+                    🏁 Big Picture — The 7 Example Types & When to Use Them
+                </div>
+                <p>
+                    <strong>Summarization</strong> → compress content |
+                    <strong>Extraction</strong> → pull specific data |
+                    <strong>QA</strong> → answer from a document |
+                    <strong>Classification</strong> → label content |
+                    <strong>Conversation</strong> → build chatbots with personality
+                    |
+                    <strong>Code Gen</strong> → generate working code from specs |
+                    <strong>Reasoning</strong> → solve multi-step problems correctly.<br
+                    /><br />
+                    Together, these 7 cover ~90% of real-world AI use cases. Every
+                    product feature you'll build will be some combination of these.
+                </p>
+            </div>
+
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="goTo(5)">← Previous</button>
+                <button class="nav-btn primary" onclick="goTo(0)"
+                    >↩ Start Over</button
+                >
+            </div>
+        </div>
+    </body>
+</Layout>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: "Segoe UI", sans-serif;
+        background: #0f1117;
+        color: #e2e8f0;
+        min-height: 100vh;
+        padding: 2rem;
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 1.75rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        font-size: 0.93rem;
+    }
+    .doc-link {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .doc-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #1e2130;
+        border: 1px solid #3b4268;
+        color: #818cf8;
+        text-decoration: none;
+        padding: 0.45rem 1.1rem;
+        border-radius: 20px;
+        font-size: 0.83rem;
+        transition: background 0.2s;
+    }
+    .doc-link a:hover {
+        background: #2d3348;
+        border-color: #6366f1;
+    }
+
+    /* Top nav tabs */
+    .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.8rem;
+        justify-content: center;
+    }
+    .tab {
+        padding: 0.4rem 0.85rem;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #64748b;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+    .tab.active {
+        background: #6366f1;
+        color: #fff;
+        border-color: #6366f1;
+    }
+    .tab:hover:not(.active) {
+        background: #2d3348;
+        color: #94a3b8;
+    }
+
+    /* Page content */
+    .page {
+        display: none;
+        animation: fadeIn 0.25s ease;
+    }
+    .page.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .page-header {
+        margin-bottom: 1.2rem;
+    }
+    .page-header h2 {
+        font-size: 1.3rem;
+        color: #fff;
+        margin-bottom: 0.3rem;
+    }
+    .page-header p {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+
+    /* Dissect grid */
+    .dissect {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1.2rem 0;
+    }
+    @media (max-width: 640px) {
+        .dissect {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .dissect-card {
+        background: #1e2130;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        border-top: 3px solid;
+    }
+    .dissect-card.used {
+        border-color: #6366f1;
+    }
+    .dissect-card.effect {
+        border-color: #059669;
+    }
+    .dissect-card.violate {
+        border-color: #e11d48;
+    }
+    .dissect-card.bonus {
+        border-color: #d97706;
+    }
+    .dissect-card h4 {
+        font-size: 0.82rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+    }
+    .dissect-card.used h4 {
+        color: #a78bfa;
+    }
+    .dissect-card.effect h4 {
+        color: #4ade80;
+    }
+    .dissect-card.violate h4 {
+        color: #fb7185;
+    }
+    .dissect-card.bonus h4 {
+        color: #fbbf24;
+    }
+    .dissect-card p,
+    .dissect-card li {
+        font-size: 0.81rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .dissect-card ul {
+        padding-left: 1rem;
+    }
+    .dissect-card li {
+        margin-bottom: 3px;
+    }
+
+    /* Prompt/output display */
+    .prompt-wrap {
+        background: #12151f;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin: 0.8rem 0;
+    }
+    .prompt-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #64748b;
+        margin-bottom: 0.4rem;
+    }
+    .prompt-wrap pre {
+        font-family: monospace;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        line-height: 1.75;
+        color: #c7d2fe;
+    }
+    .output-wrap {
+        background: #111a14;
+        border-radius: 10px;
+        padding: 0.8rem 1.2rem;
+        margin: 0.5rem 0;
+    }
+    .output-wrap .lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        color: #4ade8066;
+        margin-bottom: 0.3rem;
+    }
+    .output-wrap pre {
+        font-family: monospace;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        line-height: 1.65;
+        color: #86efac;
+    }
+
+    /* Highlight spans inside pre */
+    .hl-instruction {
+        color: #a78bfa;
+        font-weight: 600;
+    }
+    .hl-context {
+        color: #4ade80;
+    }
+    .hl-input {
+        color: #fbbf24;
+    }
+    .hl-output-ind {
+        color: #fb7185;
+    }
+    .hl-format {
+        color: #38bdf8;
+    }
+
+    /* Variant comparison */
+    .variants {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin: 0.8rem 0;
+    }
+    @media (max-width: 640px) {
+        .variants {
+            grid-template-columns: 1fr;
+        }
+    }
+    .v-box {
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+    }
+    .v-box.bad {
+        background: #1e1515;
+        border: 1px solid #5c262655;
+    }
+    .v-box.good {
+        background: #131e15;
+        border: 1px solid #1a5c3055;
+    }
+    .v-box .v-lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+    }
+    .v-box.bad .v-lbl {
+        color: #f87171;
+    }
+    .v-box.good .v-lbl {
+        color: #4ade80;
+    }
+    .v-box pre {
+        font-family: monospace;
+        font-size: 0.76rem;
+        white-space: pre-wrap;
+        color: #cbd5e1;
+        line-height: 1.65;
+        background: #0f1117;
+        border-radius: 6px;
+        padding: 0.55rem 0.7rem;
+    }
+    .v-box .v-note {
+        font-size: 0.74rem;
+        color: #64748b;
+        margin-top: 0.45rem;
+        font-style: italic;
+    }
+
+    /* Legend */
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    .leg {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+    .leg-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    /* Nav */
+    .nav-btns {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+    }
+    .nav-btn {
+        padding: 0.5rem 1.3rem;
+        border-radius: 10px;
+        font-size: 0.86rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #2d3348;
+        background: #1e2130;
+        color: #94a3b8;
+        transition: all 0.2s;
+    }
+    .nav-btn:hover {
+        background: #2d3348;
+    }
+    .nav-btn.primary {
+        background: #6366f1;
+        border-color: #6366f1;
+        color: #fff;
+    }
+    .nav-btn.primary:hover {
+        background: #4f46e5;
+    }
+    .nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #1e2130;
+        margin: 1.2rem 0;
+    }
+
+    .bonus-insight {
+        background: #1e2414;
+        border: 1px solid #2a4a2a;
+        border-radius: 10px;
+        padding: 0.9rem 1.1rem;
+        margin-top: 1rem;
+    }
+    .bonus-insight .bi-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #fbbf24;
+        margin-bottom: 0.4rem;
+    }
+    .bonus-insight p {
+        font-size: 0.81rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .bonus-insight strong {
+        color: #e2e8f0;
+    }
+</style>
+<script>
+    let current = 0;
+    function goTo(n: number) {
+        (
+            document.getElementById("page-" + current) as HTMLElement
+        ).classList.remove("active");
+        document.querySelectorAll(".tab")[current].classList.remove("active");
+        current = n;
+        (document.getElementById("page-" + n) as HTMLElement).classList.add(
+            "active",
+        );
+        document.querySelectorAll(".tab")[n].classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+</script>

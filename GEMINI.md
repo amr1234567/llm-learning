@@ -29,3 +29,16 @@ The following commands are used to work with this project:
 
 *   Do not execute any `git` command without explicit confirmation.
 *   Do not refactor a page into components without explicit confirmation.
+*   When instructed to "refactor this page," it means to:
+    *   **Integrate with `src/layouts/Layout.astro`:**
+        *   Add `import Layout from '../../layouts/Layout.astro';` to the frontmatter of the page being refactored.
+        *   Wrap the entire page's main content (everything that would normally be inside the `<body>` tag, excluding global CSS/JS which are handled by the layout) within a `<div class="container">` which itself is wrapped within `<Layout>...</Layout>`. This `div.container` is used for consistent padding, max-width, and horizontal centering across pages.
+        *   **Remove redundant HTML structure:** Ensure the refactored page does *not* contain `<!doctype html>`, `<html>`, `<head>`, or `<body>` tags, as these are provided by `src/layouts/Layout.astro`.
+    *   **Manage Styling:**
+        *   Move all page-specific `<style>` tags to the bottom of the `.astro` file, *outside* the `<Layout>` component.
+        *   Remove any global CSS rules (like `* { ... }` or `body { ... }` selectors) from the page's `<style>` block, as these are handled by `src/layouts/Layout.astro`.
+    *   **Manage Scripting:**
+        *   Move all page-specific `<script>` tags to the bottom of the `.astro` file, *outside* the `<Layout>` component.
+    *   **Update Navigation:**
+        *   Add a navigation link to the refactored page in `src/components/Navbar.astro`, ensuring it's placed logically based on its folder hierarchy (e.g., under 'Introduction' for pages in `src/pages/introduction`).
+        *   Add a link (card, if applicable) to the refactored page on the main `src/pages/index.astro` page.
