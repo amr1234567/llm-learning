@@ -1005,7 +1005,7 @@ import Layout from "../../layouts/Layout.astro";
 </style>
 
 <script>
-    function showTab(event: Event, type: string) {
+    (window as any).showTab = (event: Event, type: string) => {
         document
             .querySelectorAll(".shot-content")
             .forEach((el) => el.classList.remove("active"));
@@ -1016,7 +1016,7 @@ import Layout from "../../layouts/Layout.astro";
         (event?.target as HTMLElement)?.classList.add("active");
     }
 
-    function buildMetaPrompt() {
+    (window as any).buildMetaPrompt = () => {
         const role = (
             document.getElementById("f-role") as HTMLInputElement
         )?.value.trim();
@@ -1069,7 +1069,7 @@ import Layout from "../../layouts/Layout.astro";
         if (pre) pre.textContent = prompt;
     }
 
-    function copyPrompt() {
+    (window as any).copyPrompt = () => {
         const text = document.getElementById("result-text")?.textContent || "";
         navigator.clipboard.writeText(text).then(() => {
             const btn = document.querySelector(
@@ -1082,5 +1082,5 @@ import Layout from "../../layouts/Layout.astro";
                 }, 2000);
             }
         });
-    }
+    };
 </script>
